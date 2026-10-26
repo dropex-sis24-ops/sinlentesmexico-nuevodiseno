@@ -5,6 +5,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = { proc: 'laser', monthly: 800, years: 15, open: 0, active: 0 };
+    this.state.sim = false;
     var self = this;
     this.storyRef = function (el) { self.storyEl = el; };
     this.procRef = function (el) { self.procCv = el; };
@@ -1200,7 +1201,13 @@ class App extends Component {
       procPrice: fmt(cur.price),
       diff: fmt(Math.max(0, total - cur.price)),
       procMsi: cur.msi,
-      faqs: faqs
+      faqs: faqs,
+
+      /* Ventana del simulador */
+      simOvCls: s.sim ? 'sim-ov on' : 'sim-ov',
+      simAbrir: function (e) { if (e) e.preventDefault(); document.body.classList.add('sim-abierto'); self.setState({ sim: true }); },
+      simCerrar: function () { document.body.classList.remove('sim-abierto'); self.setState({ sim: false }); },
+      simFondo: function (e) { if (e.target === e.currentTarget) { document.body.classList.remove('sim-abierto'); self.setState({ sim: false }); } }
     };
   }
   render() {
@@ -1244,6 +1251,7 @@ ${v.menuOpen ? html`
 <p class="ihero-p fade-up d2">Responde 4 preguntas y descubre qué procedimiento se acerca más a tu caso. Al terminar eliges cómo avanzar: una videollamada sin costo con un oftalmólogo, o agendar directo tus estudios preoperatorios.</p>
 <div class="ihero-cta fade-up d3">
 <a class="btn-white shine" href="test.html">Hacer el test · 4 preguntas <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+<button type="button" class="btn-white shine" onClick=${v.simAbrir}>Ver el simulador <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
 <a class="ihero-talk" href="https://wa.me/525591896084?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20procedimientos%20de%20Sinlentesmexico."><span class="ihero-talk-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 20.5l1.3-4.2A8.5 8.5 0 1112 20.5a8.4 8.4 0 01-4.2-1.1z"></path><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.4-1.9-.9-.8.8a4 4 0 01-2.4-2.4l.8-.8-.9-1.9z"></path></svg></span><span><small>¿Prefieres hablar?</small><b>Escríbenos por WhatsApp</b></span></a>
 </div>
 <a class="ihero-play fade-up d4" href="https://www.youtube.com/watch?v=41sXpVChbng"><span class="pl"><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg></span>Qué es Sinlentesmexico y cómo trabajamos</a>
@@ -1719,6 +1727,18 @@ ${f.open ? html`<div class="faq-a">${f.a}</div>` : null}
 </div>
 </footer>
 
+
+<div class=${v.simOvCls} onClick=${v.simFondo} role="dialog" aria-modal="true" aria-label="Simulador de visión">
+<div class="sim-box">
+<div class="sim-bar">
+<div><span class="eyebrow">Simulador</span><h3>Simulador de visión</h3></div>
+<button type="button" class="sim-x" onClick=${v.simCerrar}>Salir</button>
+</div>
+<div class="sim-cuerpo">
+<p class="sim-vacio">Espacio reservado para el simulador.</p>
+</div>
+</div>
+</div>
 
 <div class="mbar">
 <a class="btn btn-primary" href="test.html">Hacer el test · 4 preguntas</a>
