@@ -44,6 +44,7 @@ class App extends Component {
     this.state.yt = '';
     this.state.sim = false; this.state.simEsc = 'noche'; this.state.simCond = 'cat';
     this.state.simLente = ''; this.state.simLenteB = 'pre'; this.state.simComp = true;
+    this.state.simError = '';
     var self = this;
     this.storyRef = function (el) { self.storyEl = el; };
     this.procRef = function (el) { self.procCv = el; };
@@ -1242,6 +1243,11 @@ class App extends Component {
       faqs: faqs,
 
       /* Ventana del simulador */
+      simError: s.simError,
+      simErrorTxt: s.simError === 'autoplay'
+        ? 'El navegador no deja arrancar el video solo. Toca aquí para reproducirlo.'
+        : 'No se pudo cargar el video. Si abriste el archivo con doble clic, ábrelo con Live Server o súbelo a un servidor.',
+      simTocar: function () { self.simTocar(); },
       ytAbierto: s.yt,
       ytVer: function (id) { self.setState({ yt: id }); },
       simOn: s.sim,
@@ -1280,7 +1286,7 @@ class App extends Component {
     if (!vid) {
       vid = document.createElement('video');
       vid.muted = true; vid.loop = true; vid.playsInline = true; vid.setAttribute('playsinline', '');
-      vid.crossOrigin = 'anonymous'; vid.preload = 'auto';
+      vid.preload = 'auto';   // sin crossOrigin: con file:// la petición falla y el video no carga
       this._simVid = vid;
     }
     this.simCargarEscena();
@@ -1337,7 +1343,17 @@ class App extends Component {
     var vid = this._simVid; if (!vid) return;
     var esc = simBuscar(SIM_ESCENAS, this.state.simEsc);
     if (vid.dataset.k !== esc.k) { vid.dataset.k = esc.k; vid.src = esc.archivo; }
-    var p = vid.play(); if (p && p.catch) p.catch(function () {});
+    var self = this;
+    vid.onerror = function () { self.setState({ simError: 'nocarga' }); };
+    vid.oncanplay = function () { if (self.state.simError) self.setState({ simError: '' }); };
+    var p = vid.play();
+    if (p && p.catch) p.catch(function () { self.setState({ simError: 'autoplay' }); });
+  }
+  simTocar() {
+    var vid = this._simVid; if (!vid) return;
+    var self = this;
+    var p = vid.play();
+    if (p && p.then) p.then(function () { self.setState({ simError: '' }); }).catch(function () {});
   }
   simParar() {
     cancelAnimationFrame(this._simRaf);
@@ -1899,6 +1915,7 @@ ${v.simOn ? html`<div class="sim-panel">
 
 <div class="sim-lienzo">
 <canvas ref=${v.simCvRef} role="img" aria-label="Simulación de visión"></canvas>
+${v.simError ? html`<button type="button" class="sim-aviso" onClick=${v.simTocar}>${v.simErrorTxt}</button>` : null}
 <span class="sim-etq sim-etq--a">${v.simEtqA}</span>
 ${v.simComp ? html`<span class="sim-etq sim-etq--b">${v.simEtqB}</span><div class="sim-linea"></div>` : null}
 </div>
