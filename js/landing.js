@@ -7,13 +7,13 @@ const { html, render, Component } = window.htmPreact;
    Los valores son de demostración y los tiene que validar el oftalmólogo. */
 var SIM_ESCENAS = [
   { k: 'noche', label: 'Conducción nocturna', archivo: 'video/noche.mp4' },
-  { k: 'dia',   label: 'Calle de día',        archivo: 'video/dia.mp4' }
+  { k: 'dia',   label: 'Avenida de día',      archivo: 'video/dia.mp4' }
 ];
 var SIM_CONDICIONES = [
   { k: 'cat',    label: 'Cataratas',                   desenfoque: 5.0, halo: 0.60, astig: 0,    velo: 0.40 },
   { k: 'cat_as', label: 'Cataratas + astigmatismo',    desenfoque: 5.0, halo: 0.60, astig: 0.55, velo: 0.40 },
-  { k: 'pres',   label: 'Vista cansada',               desenfoque: 2.6, halo: 0.25, astig: 0,    velo: 0.10 },
-  { k: 'pres_as',label: 'Vista cansada + astigmatismo',desenfoque: 2.6, halo: 0.25, astig: 0.55, velo: 0.10 }
+  { k: 'pres',   label: 'Presbicia',                    desenfoque: 2.6, halo: 0.25, astig: 0,    velo: 0.10 },
+  { k: 'pres_as',label: 'Presbicia + astigmatismo',     desenfoque: 2.6, halo: 0.25, astig: 0.55, velo: 0.10 }
 ];
 /* corrige: cuánto del defecto quita (0 nada, 1 todo). haloExtra: halos propios del lente de noche. */
 var SIM_LENTES = [
