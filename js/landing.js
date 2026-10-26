@@ -43,7 +43,7 @@ class App extends Component {
     this.state = { proc: 'laser', monthly: 800, years: 15, open: 0, active: 0 };
     this.state.yt = '';
     this.state.sim = false; this.state.simEsc = 'noche'; this.state.simCond = 'cat';
-    this.state.simLente = ''; this.state.simLenteB = 'pre'; this.state.simComp = false;
+    this.state.simLente = ''; this.state.simLenteB = 'pre'; this.state.simComp = true;
     var self = this;
     this.storyRef = function (el) { self.storyEl = el; };
     this.procRef = function (el) { self.procCv = el; };
@@ -1246,7 +1246,7 @@ class App extends Component {
       ytVer: function (id) { self.setState({ yt: id }); },
       simOn: s.sim,
       simOvCls: s.sim ? 'sim-ov on' : 'sim-ov',
-      simAbrir: function (e) { if (e) e.preventDefault(); document.body.classList.add('sim-abierto'); self.setState({ sim: true }); setTimeout(function () { self.simIniciar(); }, 60); },
+      simAbrir: function (e) { if (e) e.preventDefault(); document.body.classList.add('sim-abierto'); self.setState({ sim: true, simComp: true }); setTimeout(function () { self.simIniciar(); }, 60); },
       simCerrar: function () { document.body.classList.remove('sim-abierto'); self.simParar(); self.setState({ sim: false }); },
       simFondo: function (e) { if (e.target === e.currentTarget) { document.body.classList.remove('sim-abierto'); self.simParar(); self.setState({ sim: false }); } },
       simCvRef: function (n) { if (n) self._simCv = n; },
@@ -1262,9 +1262,13 @@ class App extends Component {
       toggleSimComp: function () { self.setState({ simComp: !self.state.simComp }); },
       simEtqA: simBuscar(SIM_LENTES, s.simLente).label,
       simEtqB: simBuscar(SIM_LENTES, s.simLenteB).label,
-      simNota: simBuscar(SIM_CONDICIONES, s.simCond).label + ' · ' + simBuscar(SIM_ESCENAS, s.simEsc).label
-        + (s.simLente ? '. Estás viendo cómo quedaría con ' + simBuscar(SIM_LENTES, s.simLente).label + '.'
-                      : '. Así se ve hoy, sin corregir. Elige un procedimiento para comparar.')
+      simNota: (function () {
+        var base = simBuscar(SIM_CONDICIONES, s.simCond).label + ' · ' + simBuscar(SIM_ESCENAS, s.simEsc).label + '. ';
+        var a = simBuscar(SIM_LENTES, s.simLente).label, b = simBuscar(SIM_LENTES, s.simLenteB).label;
+        if (s.simComp && s.simLenteB !== s.simLente) return base + 'A la izquierda, ' + a.toLowerCase() + '; a la derecha, ' + b + '. Arrastra los selectores para cambiar cualquiera de los dos.';
+        if (s.simLente) return base + 'Estás viendo cómo quedaría con ' + a + '.';
+        return base + 'Así se ve hoy, sin corregir. Elige un procedimiento para comparar.';
+      })()
     };
   }
   /* ---- Simulador: motor de pintado ---- */
