@@ -551,8 +551,7 @@ class App extends Component {
       var glassG = new T.Group(); sv.root.add(glassG); glassG.visible = false;
       var frameMat = new T.MeshPhysicalMaterial({ color: 0xd9e6e0, metalness: 0.65, roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.08, transparent: true, opacity: 1 });
       var sqR = function (th, a, b) { var c = Math.abs(Math.cos(th)), s2 = Math.abs(Math.sin(th)); return Math.pow(Math.pow(c / a, 4) + Math.pow(s2 / b, 4), -0.25); };
-      var ANCHO_ARMAZON = 2.5;                     // ancho del armazón en la escena
-      var LA = 0.47, LB = 0.29, LX = 0.72;         // medio ancho, medio alto y separación de cada cristal
+      var LA = 0.52, LB = 0.4, LX = 0.66;
       var AJ_LENTES = { escala: 1, x: 0, y: 0, z: 0, incl: 0 };   // ajuste fino del modelo
       var rimShape = function (a, b) {
         var sh = new T.Shape(), N = 72;
@@ -578,7 +577,7 @@ class App extends Component {
         var bb = geo.boundingBox, tam = new T.Vector3(); bb.getSize(tam);
         var centro = new T.Vector3(); bb.getCenter(centro);
         geo.translate(-centro.x, -centro.y, -centro.z); // al origen
-        var k = ANCHO_ARMAZON / tam.x;                // ancho fijo, no depende del cristal
+        var k = (2 * (LX + LA + 0.07)) / tam.x;         // mismo ancho que el armazón que había
         armazon = new T.Mesh(geo, frameMat);
         armazon.scale.setScalar(k * AJ_LENTES.escala);
         armazon.position.set(AJ_LENTES.x, AJ_LENTES.y, AJ_LENTES.z);
