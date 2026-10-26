@@ -1254,6 +1254,7 @@ class App extends Component {
       faqs: faqs,
 
       /* Ventana del simulador */
+      simOn: s.sim,
       simOvCls: s.sim ? 'sim-ov on' : 'sim-ov',
       simAbrir: function (e) { if (e) e.preventDefault(); document.body.classList.add('sim-abierto'); self.setState({ sim: true }); },
       simCerrar: function () { document.body.classList.remove('sim-abierto'); self.setState({ sim: false }); },
@@ -1785,7 +1786,10 @@ ${f.open ? html`<div class="faq-a">${f.a}</div>` : null}
 <button type="button" class="sim-x" onClick=${v.simCerrar}>Salir</button>
 </div>
 <div class="sim-cuerpo">
-<p class="sim-vacio">Espacio reservado para el simulador.</p>
+${v.simOn ? html`<div class="sim-video">
+<iframe src="https://www.youtube-nocookie.com/embed/K0tfdvIOwTY?rel=0&modestbranding=1" title="Cómo ve una persona con problemas visuales" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+</div>
+<p class="sim-credito">Video del Instituto Mexicano de Oftalmología IMO IAP. Material de referencia mientras se define el simulador propio.</p>` : null}
 </div>
 </div>
 </div>
