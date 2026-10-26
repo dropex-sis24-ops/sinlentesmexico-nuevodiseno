@@ -1862,7 +1862,7 @@ ${f.open ? html`<div class="faq-a">${f.a}</div>` : null}
 <button type="button" class="sim-x" onClick=${v.simCerrar}>Salir</button>
 </div>
 <div class="sim-cuerpo">
-${v.simOn ? html`<div>
+${v.simOn ? html`<div class="sim-panel">
 <div class="sim-ctrls">
 <label class="sim-campo"><span>Escena</span>
 <select value=${v.simEsc} onChange=${v.setSimEsc}>${v.simEscenas.map((o, $index) => html`<option value=${o.k}>${o.label}</option>`)}</select></label>
@@ -1883,11 +1883,8 @@ ${v.simComp ? html`<span class="sim-etq sim-etq--b">${v.simEtqB}</span><div clas
 </div>
 
 <div class="sim-pie2">
-<p class="sim-nota2">${v.simNota}</p>
-<a class="btn btn-primary" href="test.html">Hacer el test · 4 preguntas</a>
+<p class="sim-nota2">${v.simNota}<small>Demo sobre video de referencia (calles de CDMX, Pexels). Representación orientativa, no un resultado garantizado.</small></p>
 </div>
-
-<p class="sim-credito">Demo: el efecto se calcula en vivo sobre un video de referencia (calles de CDMX, Pexels). Es una representación orientativa, no un resultado garantizado; los valores los debe validar el oftalmólogo.</p>
 </div>` : null}
 </div>
 </div>
