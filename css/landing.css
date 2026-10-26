@@ -548,3 +548,33 @@ body.sim-abierto{overflow:hidden}
   border:1px solid rgba(255,255,255,.12)}
 .sim-video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .sim-credito{margin:16px 0 0;font-size:12.5px;line-height:1.55;color:#8E9FB8;text-align:left}
+
+/* ===== Simulador: controles y lienzo ===== */
+.sim-ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px 18px;margin-bottom:18px}
+.sim-campo{display:flex;flex-direction:column;gap:7px;min-width:0}
+.sim-campo>span{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8E9FB8}
+.sim-campo select{appearance:none;width:100%;min-height:42px;padding:0 32px 0 12px;border:0;border-bottom:1.5px solid rgba(255,255,255,.3);
+  background:transparent;color:#fff;font-family:inherit;font-size:14.5px;font-weight:600;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center}
+.sim-campo select:focus{outline:none;border-bottom-color:#00E676}
+.sim-campo select option{background:#07152B;color:#fff}
+.sim-campo select:disabled{opacity:.4;cursor:not-allowed}
+.sim-comp{display:flex;align-items:center;gap:10px;align-self:flex-end;min-height:42px}
+.sim-sw{position:relative;width:46px;height:26px;border-radius:999px;background:rgba(255,255,255,.18);border:0;cursor:pointer;
+  transition:background .3s;flex:0 0 auto}
+.sim-sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.sim-sw.on{background:#00E676}
+.sim-sw.on::after{transform:translateX(20px)}
+
+.sim-lienzo{position:relative;width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#000;
+  border:1px solid rgba(255,255,255,.12)}
+.sim-lienzo canvas{display:block;width:100%;height:100%}
+.sim-etq{position:absolute;top:12px;z-index:2;display:inline-flex;align-items:center;gap:7px;
+  font-size:12px;font-weight:700;color:#fff;background:rgba(4,12,10,.62);backdrop-filter:blur(6px);
+  padding:7px 13px;border-radius:999px;max-width:46%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sim-etq--a{left:12px}
+.sim-etq--b{right:12px}
+.sim-linea{position:absolute;top:0;bottom:0;left:50%;width:2px;background:rgba(255,255,255,.75);z-index:2;pointer-events:none}
+.sim-pie2{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:flex-start;margin-top:16px}
+.sim-nota2{flex:1;min-width:240px;margin:0;font-size:14.5px;line-height:1.55;color:#D3DEFA}

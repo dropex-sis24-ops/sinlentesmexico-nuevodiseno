@@ -1,11 +1,48 @@
 /* Generated from the canvas artboard Main.dc.html — Preact + htm, no build step. */
 const { html, render, Component } = window.htmPreact;
 
+/* ===== Simulador de visión (demo) =====
+   Misma lógica que el simulador de referencia: escena + condición + lente, y comparar dos lentes.
+   Acá el efecto se calcula en vivo sobre el video; no son videos pregrabados por combinación.
+   Los valores son de demostración y los tiene que validar el oftalmólogo. */
+var SIM_ESCENAS = [
+  { k: 'noche', label: 'Conducción nocturna', archivo: 'video/noche.mp4' },
+  { k: 'dia',   label: 'Calle de día',        archivo: 'video/dia.mp4' }
+];
+var SIM_CONDICIONES = [
+  { k: 'cat',    label: 'Cataratas',                   desenfoque: 5.0, halo: 0.60, astig: 0,    velo: 0.40 },
+  { k: 'cat_as', label: 'Cataratas + astigmatismo',    desenfoque: 5.0, halo: 0.60, astig: 0.55, velo: 0.40 },
+  { k: 'pres',   label: 'Vista cansada',               desenfoque: 2.6, halo: 0.25, astig: 0,    velo: 0.10 },
+  { k: 'pres_as',label: 'Vista cansada + astigmatismo',desenfoque: 2.6, halo: 0.25, astig: 0.55, velo: 0.10 }
+];
+/* corrige: cuánto del defecto quita (0 nada, 1 todo). haloExtra: halos propios del lente de noche. */
+var SIM_LENTES = [
+  { k: '',    label: 'Sin corregir',          corrige: 0,    corrigeCat: 0,    haloExtra: 0 },
+  { k: 'las', label: 'Procedimiento Láser',   corrige: 0.88, corrigeCat: 0.15, haloExtra: 0 },
+  { k: 'ese', label: 'Presbilens Esencial',   corrige: 0.72, corrigeCat: 0.92, haloExtra: 0 },
+  { k: 'ava', label: 'Presbilens Avanzado',   corrige: 0.90, corrigeCat: 0.95, haloExtra: 0 },
+  { k: 'pre', label: 'Presbilens Premium',    corrige: 0.97, corrigeCat: 0.97, haloExtra: 0.38 }
+];
+function simBuscar(lista, k) { for (var i = 0; i < lista.length; i++) if (lista[i].k === k) return lista[i]; return lista[0]; }
+/* Mezcla condición + lente y devuelve los números con los que se pinta un lado del lienzo. */
+function simEfecto(cond, lente, escena) {
+  var esCat = cond.k.indexOf('cat') === 0;
+  var q = esCat ? lente.corrigeCat : lente.corrige;      // el láser no opera la catarata
+  var resto = 1 - q;
+  return {
+    desenfoque: cond.desenfoque * resto,
+    velo: cond.velo * resto,
+    astig: cond.astig * resto,
+    halo: cond.halo * resto + (escena.k === 'noche' ? lente.haloExtra : 0)
+  };
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = { proc: 'laser', monthly: 800, years: 15, open: 0, active: 0 };
-    this.state.sim = false;
+    this.state.sim = false; this.state.simEsc = 'noche'; this.state.simCond = 'cat';
+    this.state.simLente = ''; this.state.simLenteB = 'pre'; this.state.simComp = false;
     var self = this;
     this.storyRef = function (el) { self.storyEl = el; };
     this.procRef = function (el) { self.procCv = el; };
@@ -1206,11 +1243,100 @@ class App extends Component {
       /* Ventana del simulador */
       simOn: s.sim,
       simOvCls: s.sim ? 'sim-ov on' : 'sim-ov',
-      simAbrir: function (e) { if (e) e.preventDefault(); document.body.classList.add('sim-abierto'); self.setState({ sim: true }); },
-      simCerrar: function () { document.body.classList.remove('sim-abierto'); self.setState({ sim: false }); },
-      simFondo: function (e) { if (e.target === e.currentTarget) { document.body.classList.remove('sim-abierto'); self.setState({ sim: false }); } }
+      simAbrir: function (e) { if (e) e.preventDefault(); document.body.classList.add('sim-abierto'); self.setState({ sim: true }); setTimeout(function () { self.simIniciar(); }, 60); },
+      simCerrar: function () { document.body.classList.remove('sim-abierto'); self.simParar(); self.setState({ sim: false }); },
+      simFondo: function (e) { if (e.target === e.currentTarget) { document.body.classList.remove('sim-abierto'); self.simParar(); self.setState({ sim: false }); } },
+      simCvRef: function (n) { if (n) self._simCv = n; },
+      simEscenas: SIM_ESCENAS, simCondiciones: SIM_CONDICIONES,
+      simLentes: SIM_LENTES, simLentesB: SIM_LENTES.filter(function (l) { return l.k; }),
+      simEsc: s.simEsc, simCond: s.simCond, simLente: s.simLente, simLenteB: s.simLenteB,
+      simComp: s.simComp,
+      simSwCls: s.simComp ? 'sim-sw on' : 'sim-sw',
+      setSimEsc: function (e) { self.setState({ simEsc: e.target.value }, function () { self.simCargarEscena(); }); },
+      setSimCond: function (e) { self.setState({ simCond: e.target.value }); },
+      setSimLente: function (e) { self.setState({ simLente: e.target.value }); },
+      setSimLenteB: function (e) { self.setState({ simLenteB: e.target.value }); },
+      toggleSimComp: function () { self.setState({ simComp: !self.state.simComp }); },
+      simEtqA: simBuscar(SIM_LENTES, s.simLente).label,
+      simEtqB: simBuscar(SIM_LENTES, s.simLenteB).label,
+      simNota: simBuscar(SIM_CONDICIONES, s.simCond).label + ' · ' + simBuscar(SIM_ESCENAS, s.simEsc).label
+        + (s.simLente ? '. Estás viendo cómo quedaría con ' + simBuscar(SIM_LENTES, s.simLente).label + '.'
+                      : '. Así se ve hoy, sin corregir. Elige un procedimiento para comparar.')
     };
   }
+  /* ---- Simulador: motor de pintado ---- */
+  simIniciar() {
+    var self = this;
+    var cv = this._simCv; if (!cv) return;
+    var ctx = cv.getContext('2d');
+    var vid = this._simVid;
+    if (!vid) {
+      vid = document.createElement('video');
+      vid.muted = true; vid.loop = true; vid.playsInline = true; vid.setAttribute('playsinline', '');
+      vid.crossOrigin = 'anonymous'; vid.preload = 'auto';
+      this._simVid = vid;
+    }
+    this.simCargarEscena();
+    var pintar = function () {
+      self._simRaf = requestAnimationFrame(pintar);
+      if (!vid.videoWidth) return;
+      var W = cv.clientWidth, H = cv.clientHeight, dpr = Math.min(2, window.devicePixelRatio || 1);
+      if (cv.width !== Math.round(W * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      var s = self.state;
+      var esc = simBuscar(SIM_ESCENAS, s.simEsc), cond = simBuscar(SIM_CONDICIONES, s.simCond);
+      var comp = s.simComp && s.simLenteB !== s.simLente;
+      var lados = comp
+        ? [{ x: 0, w: W / 2, e: simEfecto(cond, simBuscar(SIM_LENTES, s.simLente), esc) },
+           { x: W / 2, w: W / 2, e: simEfecto(cond, simBuscar(SIM_LENTES, s.simLenteB), esc) }]
+        : [{ x: 0, w: W, e: simEfecto(cond, simBuscar(SIM_LENTES, s.simLente), esc) }];
+      // el video se dibuja tapando todo el lienzo (como object-fit: cover)
+      var k = Math.max(W / vid.videoWidth, H / vid.videoHeight);
+      var dw = vid.videoWidth * k, dh = vid.videoHeight * k, dx = (W - dw) / 2, dy = (H - dh) / 2;
+      lados.forEach(function (L) {
+        var e = L.e;
+        ctx.save();
+        ctx.beginPath(); ctx.rect(L.x, 0, L.w, H); ctx.clip();
+        // 1 · imagen base, con el desenfoque y el velo de la catarata
+        ctx.filter = 'blur(' + e.desenfoque.toFixed(2) + 'px)'
+          + ' sepia(' + (e.velo * 0.8).toFixed(2) + ')'
+          + ' contrast(' + (1 - e.velo * 0.3).toFixed(2) + ')'
+          + ' brightness(' + (1 + e.velo * 0.12).toFixed(2) + ')';
+        ctx.drawImage(vid, dx, dy, dw, dh);
+        // 2 · astigmatismo: una segunda imagen corrida, que duplica los bordes
+        if (e.astig > 0.01) {
+          ctx.globalAlpha = e.astig * 0.5;
+          ctx.filter = 'blur(' + (e.desenfoque + 1.5).toFixed(2) + 'px)';
+          ctx.drawImage(vid, dx + e.astig * 9, dy + e.astig * 3, dw, dh);
+          ctx.globalAlpha = 1;
+        }
+        // 3 · halos: lo más brillante, desenfocado y sumado encima
+        if (e.halo > 0.01) {
+          ctx.globalCompositeOperation = 'screen';
+          ctx.globalAlpha = Math.min(0.85, e.halo);
+          ctx.filter = 'blur(' + (6 + e.halo * 16).toFixed(1) + 'px) brightness(1.9) contrast(2.2) saturate(1.1)';
+          ctx.drawImage(vid, dx, dy, dw, dh);
+          ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+        }
+        ctx.restore();
+      });
+      ctx.filter = 'none';
+    };
+    cancelAnimationFrame(this._simRaf);
+    this._simRaf = requestAnimationFrame(pintar);
+  }
+  simCargarEscena() {
+    var vid = this._simVid; if (!vid) return;
+    var esc = simBuscar(SIM_ESCENAS, this.state.simEsc);
+    if (vid.dataset.k !== esc.k) { vid.dataset.k = esc.k; vid.src = esc.archivo; }
+    var p = vid.play(); if (p && p.catch) p.catch(function () {});
+  }
+  simParar() {
+    cancelAnimationFrame(this._simRaf);
+    if (this._simVid) { this._simVid.pause(); }
+  }
+
   render() {
     const v = this.renderVals();
     return html`<div style="min-height: 100vh" ref=${v.rootRef}>
@@ -1736,10 +1862,33 @@ ${f.open ? html`<div class="faq-a">${f.a}</div>` : null}
 <button type="button" class="sim-x" onClick=${v.simCerrar}>Salir</button>
 </div>
 <div class="sim-cuerpo">
-${v.simOn ? html`<div class="sim-video">
-<iframe src="https://www.youtube-nocookie.com/embed/K0tfdvIOwTY?rel=0&modestbranding=1" title="Cómo ve una persona con problemas visuales" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+${v.simOn ? html`<div>
+<div class="sim-ctrls">
+<label class="sim-campo"><span>Escena</span>
+<select value=${v.simEsc} onChange=${v.setSimEsc}>${v.simEscenas.map((o, $index) => html`<option value=${o.k}>${o.label}</option>`)}</select></label>
+<label class="sim-campo"><span>Condición ocular</span>
+<select value=${v.simCond} onChange=${v.setSimCond}>${v.simCondiciones.map((o, $index) => html`<option value=${o.k}>${o.label}</option>`)}</select></label>
+<label class="sim-campo"><span>Procedimiento</span>
+<select value=${v.simLente} onChange=${v.setSimLente}>${v.simLentes.map((o, $index) => html`<option value=${o.k}>${o.label}</option>`)}</select></label>
+<div class="sim-campo"><span>Comparar</span>
+<div class="sim-comp"><button type="button" class=${v.simSwCls} onClick=${v.toggleSimComp} aria-pressed=${v.simComp} aria-label="Comparar dos procedimientos"></button></div></div>
+<label class="sim-campo"><span>Comparar con</span>
+<select value=${v.simLenteB} onChange=${v.setSimLenteB} disabled=${!v.simComp}>${v.simLentesB.map((o, $index) => html`<option value=${o.k}>${o.label}</option>`)}</select></label>
 </div>
-<p class="sim-credito">Video del Instituto Mexicano de Oftalmología IMO IAP. Material de referencia mientras se define el simulador propio.</p>` : null}
+
+<div class="sim-lienzo">
+<canvas ref=${v.simCvRef} role="img" aria-label="Simulación de visión"></canvas>
+<span class="sim-etq sim-etq--a">${v.simEtqA}</span>
+${v.simComp ? html`<span class="sim-etq sim-etq--b">${v.simEtqB}</span><div class="sim-linea"></div>` : null}
+</div>
+
+<div class="sim-pie2">
+<p class="sim-nota2">${v.simNota}</p>
+<a class="btn btn-primary" href="test.html">Hacer el test · 4 preguntas</a>
+</div>
+
+<p class="sim-credito">Demo: el efecto se calcula en vivo sobre un video de referencia (calles de CDMX, Pexels). Es una representación orientativa, no un resultado garantizado; los valores los debe validar el oftalmólogo.</p>
+</div>` : null}
 </div>
 </div>
 </div>
