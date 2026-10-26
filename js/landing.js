@@ -1,6 +1,44 @@
 /* Generated from the canvas artboard Main.dc.html — Preact + htm, no build step. */
 const { html, render, Component } = window.htmPreact;
 
+/* Lector mínimo de GLB: three.js r149 se carga como script global y no trae GLTFLoader.
+   Solo necesitamos POSITION, NORMAL e índices de un nodo concreto. */
+function leerGLB(url, T) {
+  return fetch(url).then(function (r) { return r.arrayBuffer(); }).then(function (buf) {
+    var dv = new DataView(buf), largoJson = dv.getUint32(12, true);
+    var json = JSON.parse(new TextDecoder().decode(new Uint8Array(buf, 20, largoJson)));
+    var bin = 20 + largoJson + 8;   // salta la cabecera del segundo trozo (BIN)
+    var TIPOS = { 5120: Int8Array, 5121: Uint8Array, 5122: Int16Array, 5123: Uint16Array, 5125: Uint32Array, 5126: Float32Array };
+    var ITEMS = { SCALAR: 1, VEC2: 2, VEC3: 3, VEC4: 4 };
+    function leerAcc(i) {
+      var a = json.accessors[i], v = json.bufferViews[a.bufferView], C = TIPOS[a.componentType];
+      var n = ITEMS[a.type], ini = bin + (v.byteOffset || 0) + (a.byteOffset || 0);
+      var paso = v.byteStride || 0;
+      if (!paso || paso === n * C.BYTES_PER_ELEMENT) return new C(buf, ini, a.count * n);
+      // datos entrelazados: hay que ir saltando de paso en paso
+      var salida = new C(a.count * n);
+      for (var k = 0; k < a.count; k++) salida.set(new C(buf, ini + k * paso, n), k * n);
+      return salida;
+    }
+    return {
+      geometria: function (iNodo) {
+        var nodo = json.nodes[iNodo], malla = json.meshes[nodo.mesh], g = new T.BufferGeometry();
+        var p = malla.primitives[0];
+        g.setAttribute('position', new T.BufferAttribute(leerAcc(p.attributes.POSITION), 3));
+        if (p.attributes.NORMAL != null) g.setAttribute('normal', new T.BufferAttribute(leerAcc(p.attributes.NORMAL), 3));
+        if (p.indices != null) g.setIndex(new T.BufferAttribute(leerAcc(p.indices), 1));
+        var m = new T.Matrix4();
+        m.compose(
+          new T.Vector3().fromArray(nodo.translation || [0, 0, 0]),
+          new T.Quaternion().fromArray(nodo.rotation || [0, 0, 0, 1]),
+          new T.Vector3().fromArray(nodo.scale || [1, 1, 1]));
+        g.applyMatrix4(m);
+        return g;
+      }
+    };
+  });
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -514,6 +552,7 @@ class App extends Component {
       var frameMat = new T.MeshPhysicalMaterial({ color: 0xd9e6e0, metalness: 0.65, roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.08, transparent: true, opacity: 1 });
       var sqR = function (th, a, b) { var c = Math.abs(Math.cos(th)), s2 = Math.abs(Math.sin(th)); return Math.pow(Math.pow(c / a, 4) + Math.pow(s2 / b, 4), -0.25); };
       var LA = 0.52, LB = 0.4, LX = 0.66;
+      var AJ_LENTES = { escala: 1, x: 0, y: 0, z: 0, incl: 0 };   // ajuste fino del modelo
       var rimShape = function (a, b) {
         var sh = new T.Shape(), N = 72;
         for (var i = 0; i <= N; i++) { var th = i / N * Math.PI * 2, r = sqR(th, a, b), px = Math.cos(th) * r, py = Math.sin(th) * r; if (i) sh.lineTo(px, py); else sh.moveTo(px, py); }
@@ -527,14 +566,24 @@ class App extends Component {
       })();
       var halves = [-1, 1].map(function (sgn) {
         var h = new T.Group(); glassG.add(h);
-        var rim = new T.Mesh(rimGeo, frameMat); rim.position.x = sgn * LX; h.add(rim);
-        var br = new T.Mesh(new T.TorusGeometry(0.13, 0.028, 10, 20, Math.PI / 2), frameMat);
-        br.rotation.z = sgn > 0 ? 0 : Math.PI / 2; br.position.set(0, 0.12, 0); h.add(br);
         var temple = new T.Group(); temple.position.set(sgn * (LX + LA + 0.06), 0.12, 0); h.add(temple);
-        var arm = new T.Mesh(new T.BoxGeometry(0.045, 0.05, 1.25), frameMat); arm.position.set(0, 0, -0.62); temple.add(arm);
-        var tip = new T.Mesh(new T.BoxGeometry(0.045, 0.22, 0.05), frameMat); tip.position.set(0, -0.09, -1.24); tip.rotation.x = 0.5; temple.add(tip);
         return { g: h, sgn: sgn, temple: temple };
       });
+      // Armazón: modelo propio (modelos/lentes.glb). Mientras carga no se ve nada más que los cristales.
+      var armazon = null;
+      leerGLB('modelos/lentes.glb', T).then(function (glb) {
+        var geo = glb.geometria(1);                     // nodo 1 = aros + patillas
+        geo.computeBoundingBox();
+        var bb = geo.boundingBox, tam = new T.Vector3(); bb.getSize(tam);
+        var centro = new T.Vector3(); bb.getCenter(centro);
+        geo.translate(-centro.x, -centro.y, -centro.z); // al origen
+        var k = (2 * (LX + LA + 0.07)) / tam.x;         // mismo ancho que el armazón que había
+        armazon = new T.Mesh(geo, frameMat);
+        armazon.scale.setScalar(k * AJ_LENTES.escala);
+        armazon.position.set(AJ_LENTES.x, AJ_LENTES.y, AJ_LENTES.z);
+        armazon.rotation.set(AJ_LENTES.incl, 0, 0);
+        glassG.add(armazon);
+      }).catch(function (e) { console.warn('No se pudo cargar modelos/lentes.glb', e); });
       // lenses pre-cut into shards (spokes + inner ring), each centred on its own centroid
       var micaMat = new T.ShaderMaterial({
         uniforms: { tBlur: { value: null }, res: { value: new T.Vector2(1, 1) }, op: { value: 0.96 }, clear: { value: 0 }, bg: { value: new T.Vector3(0.004, 0.02, 0.016) } },

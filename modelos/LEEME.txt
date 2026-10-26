@@ -1,0 +1,12 @@
+lentes.glb — modelo del armazón que se usa en la fase "Sin lentes" del recorrido 3D.
+
+Origen: modelo propio del proyecto Sinlentes (el mismo de la portada de sinlentesmx).
+Optimizado con @gltf-transform/cli v4:
+  optimize --compress false --texture-compress false --simplify-ratio 0.22 --simplify-error 0.0012
+De 4,23 MB y 96.784 triángulos a 632 KB y 23.138.
+
+Nodos: 0 = cristales (no se usan, la landing tiene los suyos para romperse)
+       1 = armazón completo (aros + patillas)  ← el que se carga
+       2 = piso del estudio (se ignora)
+Se lee con un lector mínimo de GLB incluido en js/landing.js (leerGLB), porque
+three.js r149 se carga como script global y no trae GLTFLoader.
