@@ -41,6 +41,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = { proc: 'laser', monthly: 800, years: 15, open: 0, active: 0 };
+    this.state.yt = '';
     this.state.sim = false; this.state.simEsc = 'noche'; this.state.simCond = 'cat';
     this.state.simLente = ''; this.state.simLenteB = 'pre'; this.state.simComp = false;
     var self = this;
@@ -1241,6 +1242,8 @@ class App extends Component {
       faqs: faqs,
 
       /* Ventana del simulador */
+      ytAbierto: s.yt,
+      ytVer: function (id) { self.setState({ yt: id }); },
       simOn: s.sim,
       simOvCls: s.sim ? 'sim-ov on' : 'sim-ov',
       simAbrir: function (e) { if (e) e.preventDefault(); document.body.classList.add('sim-abierto'); self.setState({ sim: true }); setTimeout(function () { self.simIniciar(); }, 60); },
@@ -1579,10 +1582,14 @@ ${v.procs.map((p, $index) => html`
 
 <div class="vrow" style="margin-top: 100px">
 <div class="rv-s">
-<a class="video" href="https://www.youtube.com/watch?v=41sXpVChbng" aria-label="Ver video: Qué es Sinlentesmexico y cómo trabajamos">
-<span class="play"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg></span>
-<span class="vcap"><span class="pulse-dot"></span>Qué es Sinlentesmexico y cómo trabajamos</span>
-</a>
+<div class="ytcard" style="background-image: url(img/yt/41sXpVChbng.jpg)">
+${v.ytAbierto === '41sXpVChbng'
+  ? html`<iframe src="https://www.youtube-nocookie.com/embed/41sXpVChbng?autoplay=1&rel=0&modestbranding=1" title="Qué es Sinlentesmexico y cómo trabajamos" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`
+  : html`<button type="button" class="ytcard__btn" onClick=${() => v.ytVer('41sXpVChbng')} aria-label="Reproducir: Qué es Sinlentesmexico y cómo trabajamos">
+<span class="ytcard__play"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg></span>
+<span class="ytcard__cap"><span class="pulse-dot"></span>Qué es Sinlentesmexico y cómo trabajamos</span>
+</button>`}
+</div>
 </div>
 <div class="rv">
 <span class="eyebrow">Quiénes somos</span>
@@ -1598,10 +1605,14 @@ ${v.procs.map((p, $index) => html`
 </div>
 <div class="vrow rev" style="margin-top: 88px">
 <div class="rv-s">
-<a class="video" href="https://www.youtube.com/watch?v=2XO8_NGPsOw" aria-label="Ver video: El proceso paso a paso, de los estudios al alta">
-<span class="play"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg></span>
-<span class="vcap"><span class="pulse-dot"></span>El proceso paso a paso, de los estudios al alta</span>
-</a>
+<div class="ytcard" style="background-image: url(img/yt/2XO8_NGPsOw.jpg)">
+${v.ytAbierto === '2XO8_NGPsOw'
+  ? html`<iframe src="https://www.youtube-nocookie.com/embed/2XO8_NGPsOw?autoplay=1&rel=0&modestbranding=1" title="El proceso paso a paso, de los estudios al alta" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`
+  : html`<button type="button" class="ytcard__btn" onClick=${() => v.ytVer('2XO8_NGPsOw')} aria-label="Reproducir: El proceso paso a paso, de los estudios al alta">
+<span class="ytcard__play"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg></span>
+<span class="ytcard__cap"><span class="pulse-dot"></span>El proceso paso a paso, de los estudios al alta</span>
+</button>`}
+</div>
 </div>
 <div class="rv">
 <span class="eyebrow">El día del procedimiento</span>
@@ -1724,9 +1735,15 @@ ${v.tabs.map((t, $index) => html`<button type="button" class=${t.cls} onClick=${
 <p class="muted" style="font-size: 18px; line-height: 1.55; margin: 0 0 26px">Pacientes de distintas edades y procedimientos contando qué cambió en su día a día: manejar de noche, leer un menú, entrar a nadar sin pensarlo.</p>
 <a class="btn btn-primary" href="test.html">Empezar mi test</a>
 </div>
-<div class="video rv-s" role="img" aria-label="Video de testimonios — pendiente de publicar">
-<span class="play" style="opacity: .55"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg></span>
-<span class="vcap" style="font-weight: 600; font-size: 14px; color: #D3DEFA">Video de testimonios — pendiente de publicar. Pacientes que ya pasaron por el procedimiento.</span>
+<div class="rv-s">
+<div class="ytcard" style="background-image: url(img/yt/uU7Zi72E7Iw.jpg)">
+${v.ytAbierto === 'uU7Zi72E7Iw'
+  ? html`<iframe src="https://www.youtube-nocookie.com/embed/uU7Zi72E7Iw?autoplay=1&rel=0&modestbranding=1" title="Testimonios reales: así cambió su vida" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`
+  : html`<button type="button" class="ytcard__btn" onClick=${() => v.ytVer('uU7Zi72E7Iw')} aria-label="Reproducir: Testimonios reales: así cambió su vida">
+<span class="ytcard__play"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg></span>
+<span class="ytcard__cap"><span class="pulse-dot"></span>Testimonios reales: así cambió su vida</span>
+</button>`}
+</div>
 </div>
 </div>
 </div>
