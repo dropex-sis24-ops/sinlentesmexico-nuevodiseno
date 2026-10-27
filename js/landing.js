@@ -1369,7 +1369,7 @@ class App extends Component {
 <header class=${v.topCls}>
 <div class="wrap navbar">
 <a class="logo" href="https://www.sinlentesmexico.mx/">
-<span style="font-family: Sora, sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -0.02em">Sinlentesmexico</span><span class="logo-dot" aria-hidden="true"></span>
+<img class="logo-img" src="img/logo.svg" alt="" aria-hidden="true" width="34" height="27" /><span style="font-family: Sora, sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -0.02em">Sinlentesmexico</span>
 </a>
 <nav class="navlinks" aria-label="Principal">
 <a href="#rutas">Procedimientos</a><a href="#compara">Compara</a><a href="#sedes">Sedes</a><a href="#proceso">Cómo funciona</a><a href="https://www.sinlentesmexico.mx/aliados">Únete al equipo</a><a href="#faq">Preguntas</a>

@@ -29,8 +29,11 @@ h1,h2,h3{font-family:Sora,system-ui,sans-serif;letter-spacing:-0.02em}
 .navbar{display:flex;align-items:center;gap:clamp(14px,2.2vw,40px);min-height:76px}
 .logo{display:flex;align-items:center;gap:8px;text-decoration:none;color:#07152B;min-height:44px;flex:0 0 auto}
 .logo:hover{color:#07152B}
-.logo-dot{width:8px;height:8px;border-radius:50%;background:#6CC24A;margin-top:6px;transition:transform .5s cubic-bezier(.34,1.56,.64,1),box-shadow .4s}
-.logo:hover .logo-dot{transform:scale(1.6);box-shadow:0 0 0 5px rgba(108,194,74,.2)}
+.logo-dot{display:none}
+/* Logo de la empresa, con sus colores reales (azul y verde de la marca). */
+.logo-img{flex:0 0 auto;width:34px;height:auto;display:block;
+  transition:transform .5s cubic-bezier(.34,1.56,.64,1)}
+.logo:hover .logo-img{transform:scale(1.08)}
 .navlinks{flex:1 1 auto;display:flex;justify-content:center;gap:clamp(2px,.5vw,8px);min-width:0}
 .navlinks a{position:relative;white-space:nowrap;display:inline-flex;align-items:center;min-height:44px;padding:0 clamp(7px,.8vw,13px);border-radius:999px;color:#2B3A52;text-decoration:none;font-weight:500;font-size:clamp(13.5px,1.15vw,15.5px);transition:color .3s,background .35s cubic-bezier(.16,1,.3,1),transform .35s cubic-bezier(.16,1,.3,1)}
 .navlinks a::after{content:"";position:absolute;left:50%;bottom:4px;width:5px;height:5px;border-radius:50%;background:#22C38E;transform:translateX(-50%) scale(0);transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
@@ -95,7 +98,7 @@ h1,h2,h3{font-family:Sora,system-ui,sans-serif;letter-spacing:-0.02em}
 .topbar.over .menu-lang .lang-b[aria-pressed="true"]{background:#00E676;color:#051512}
 @media (max-width:980px){.navlinks{display:none}.navbar{justify-content:space-between}.menu-btn{display:inline-flex}}
 .menu-panel>button{width:100%;font:inherit;font-weight:700;text-align:left;background:none;border:0;cursor:pointer}
-@media (max-width:520px){.menu-panel{grid-template-columns:minmax(0,1fr)}.btn-login span{display:none}}
+@media (max-width:520px){.menu-panel{grid-template-columns:minmax(0,1fr)}.btn-login span{display:none}.logo-img{width:28px}}
 .pulse-dot{width:8px;height:8px;border-radius:50%;background:#22C38E;box-shadow:0 0 0 0 rgba(34,195,142,.6);animation:pulse 2s infinite}
 @keyframes pulse{70%{box-shadow:0 0 0 10px rgba(34,195,142,0)}100%{box-shadow:0 0 0 0 rgba(34,195,142,0)}}
 

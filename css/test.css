@@ -124,3 +124,7 @@ footer{border-top:1px solid #E1E8F2;margin-top:80px}
 .lang-b{min-height:34px;min-width:40px;padding:0 10px;border:0;border-radius:999px;cursor:pointer;
   background:none;color:#2B3A52;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.04em}
 .lang-b[aria-pressed="true"]{background:#00E676;color:#051512}
+
+/* Logo de la empresa junto al nombre */
+.logo-dot{display:none}
+.logo-img{flex:0 0 auto;width:34px;height:auto;display:block}
