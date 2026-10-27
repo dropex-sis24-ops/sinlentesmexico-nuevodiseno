@@ -5,9 +5,14 @@ const { html, render, Component } = window.htmPreact;
    Misma lógica que el simulador de referencia: escena + condición + lente, y comparar dos lentes.
    Acá el efecto se calcula en vivo sobre el video; no son videos pregrabados por combinación.
    Los valores son de demostración y los tiene que validar el oftalmólogo. */
+/* encuadre: qué parte del video se conserva cuando el lienzo es más
+   panorámico que el video y hay que recortar arriba y abajo.
+   0 = se queda con la parte de arriba, 0.5 = centrado, 1 = la de abajo.
+   Centrado se comía la ciudad y las luces y dejaba media pantalla de asfalto:
+   la toma parecía caída. Subirla deja a la vista lo que importa mirar. */
 var SIM_ESCENAS = [
-  { k: 'noche', label: 'Conducción nocturna', archivo: 'video/noche.mp4' },
-  { k: 'dia',   label: 'Avenida de día',      archivo: 'video/dia.mp4' }
+  { k: 'noche', label: 'Conducción nocturna', archivo: 'video/noche.mp4', encuadre: 0.28 },
+  { k: 'dia',   label: 'Avenida de día',      archivo: 'video/dia.mp4',   encuadre: 0.28 }
 ];
 /* Cada condición dice de qué TIPO es, porque de eso depende qué procedimiento
    la resuelve. Antes la lista sólo tenía catarata y presbicia, que son
@@ -1351,7 +1356,8 @@ class App extends Component {
         : [{ x: 0, w: W, e: simEfecto(cond, simBuscar(SIM_LENTES, s.simLente), esc) }];
       // el video se dibuja tapando todo el lienzo (como object-fit: cover)
       var k = Math.max(W / vid.videoWidth, H / vid.videoHeight);
-      var dw = vid.videoWidth * k, dh = vid.videoHeight * k, dx = (W - dw) / 2, dy = (H - dh) / 2;
+      var enc = esc && typeof esc.encuadre === 'number' ? esc.encuadre : 0.5;
+      var dw = vid.videoWidth * k, dh = vid.videoHeight * k, dx = (W - dw) / 2, dy = (H - dh) * enc;
       lados.forEach(function (L) {
         var e = L.e;
         ctx.save();
