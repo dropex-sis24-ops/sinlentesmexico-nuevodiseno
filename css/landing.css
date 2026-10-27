@@ -350,9 +350,9 @@ h1,h2,h3{font-family:Sora,system-ui,sans-serif;letter-spacing:-0.02em}
 /* ethic section */
 .ethic{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:56px;align-items:center;font-family:Inter,Manrope,system-ui,sans-serif}
 /* El lente 3D es blanco translúcido: sobre fondo claro se perdía. Va sobre
-   el azul oscuro de la identidad (#07152B), con un halo verde detrás para
-   despegarlo del fondo. */
-.ethic-card{position:relative;height:500px;border-radius:16px;background:radial-gradient(120% 90% at 50% 45%,#0E2A45 0%,#07152B 62%);border:1px solid rgba(255,255,255,.1);box-shadow:0 24px 48px -28px rgba(7,21,43,.6);overflow:hidden}
+   el verde oscuro que domina la página (#051512, con #0E3A31 al centro) y
+   un halo del verde de marca detrás para despegarlo del fondo. */
+.ethic-card{position:relative;height:500px;border-radius:16px;background:radial-gradient(120% 90% at 50% 45%,#0E3A31 0%,#051512 62%);border:1px solid rgba(0,230,118,.16);box-shadow:0 24px 48px -28px rgba(5,21,18,.6);overflow:hidden}
 .ethic-card::before{content:"";position:absolute;inset:16% 12%;border-radius:50%;background:radial-gradient(circle,rgba(0,230,118,.3),rgba(0,230,118,.12) 48%,transparent 72%);filter:blur(26px);pointer-events:none}
 .ethic-card canvas{position:relative;width:100%;height:100%;display:block;cursor:grab;touch-action:pan-y}
 .ethic-badge{position:absolute;z-index:2;top:18px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;white-space:nowrap;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:#E8EEF7;font:600 13px Inter,Manrope,sans-serif;backdrop-filter:blur(6px);pointer-events:none}
@@ -584,12 +584,12 @@ body{background:#F8FAF9}
   padding:0;background:#040C0A}
 .sim-ov.on{display:flex}
 body.sim-abierto{overflow:hidden}
-.sim-box{position:relative;width:100%;height:100%;max-height:100%;overflow:hidden;display:flex;flex-direction:column;background:#07152B;color:#E8EEF7;
+.sim-box{position:relative;width:100%;height:100%;max-height:100%;overflow:hidden;display:flex;flex-direction:column;background:#051512;color:#E8EEF7;
   border:0;border-radius:0;
   animation:simUp .34s cubic-bezier(.2,.8,.2,1)}
 @keyframes simUp{from{opacity:0}to{opacity:1}}
 .sim-bar{flex:0 0 auto;z-index:4;display:flex;align-items:center;justify-content:space-between;gap:16px;
-  padding:14px clamp(18px,4vw,40px);background:rgba(7,21,43,.94);backdrop-filter:blur(12px);
+  padding:14px clamp(18px,4vw,40px);background:rgba(5,21,18,.94);backdrop-filter:blur(12px);
   border-bottom:1px solid rgba(255,255,255,.1);border-radius:0}
 .sim-bar h3{margin:0;font-size:18px;color:#fff}
 .sim-bar .eyebrow{color:#00E676;display:block;margin-bottom:5px}
@@ -600,7 +600,7 @@ body.sim-abierto{overflow:hidden}
 .sim-x:hover{background:#00E676;border-color:#00E676;color:#051512}
 .sim-cuerpo{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;padding:16px clamp(18px,4vw,40px) 18px}
   .sim-panel{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px}
-.sim-vacio{margin:0;font-size:15px;line-height:1.6;color:#8E9FB8;max-width:420px}
+.sim-vacio{margin:0;font-size:15px;line-height:1.6;color:#8FAFA0;max-width:420px}
 @media (max-width:760px){
   .sim-bar{padding:14px 18px}
   .sim-cuerpo{min-height:0;flex:1;padding:14px 18px 16px}
@@ -609,7 +609,7 @@ body.sim-abierto{overflow:hidden}
 .sim-video{position:relative;width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#000;
   border:1px solid rgba(255,255,255,.12)}
 .sim-video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.sim-credito{margin:16px 0 0;font-size:12.5px;line-height:1.55;color:#8E9FB8;text-align:left}
+.sim-credito{margin:16px 0 0;font-size:12.5px;line-height:1.55;color:#8FAFA0;text-align:left}
 
 /* ===== Simulador: controles y lienzo ===== */
 .sim-ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px 20px;margin:0;flex:0 0 auto;
@@ -622,7 +622,7 @@ body.sim-abierto{overflow:hidden}
   background-repeat:no-repeat;background-position:right 8px center}
 .sim-campo select:hover{border-bottom-color:#00E676}
 .sim-campo select:focus{outline:none;border-bottom-color:#00E676}
-.sim-campo select option{background:#07152B;color:#fff}
+.sim-campo select option{background:#051512;color:#fff}
 .sim-campo select:disabled{opacity:.4;cursor:not-allowed}
 .sim-comp{display:flex;align-items:center;gap:10px;min-height:34px}
 .sim-sw{position:relative;width:46px;height:26px;border-radius:999px;background:rgba(255,255,255,.18);border:0;cursor:pointer;
@@ -642,12 +642,12 @@ body.sim-abierto{overflow:hidden}
 .sim-linea{position:absolute;top:0;bottom:0;left:50%;width:2px;background:#00E676;z-index:2;pointer-events:none;box-shadow:0 0 16px rgba(0,230,118,.6)}
 .sim-pie2{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;margin:0;
   padding:11px 16px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);flex:0 0 auto}
-.sim-nota2{flex:1;min-width:240px;margin:0;font-size:13.5px;line-height:1.45;color:#D3DEFA}
-  .sim-nota2 small{display:block;margin-top:3px;font-size:11.5px;color:#7F90A8}
+.sim-nota2{flex:1;min-width:240px;margin:0;font-size:13.5px;line-height:1.45;color:#DCEFE6}
+  .sim-nota2 small{display:block;margin-top:3px;font-size:11.5px;color:#8FAFA0}
 
 /* ===== Miniaturas de YouTube con reproducción directa ===== */
 .ytcard{position:relative;display:block;width:100%;aspect-ratio:16/9;border-radius:28px;overflow:hidden;
-  background:#07152B center/cover no-repeat;border:1px solid rgba(0,230,118,.28);isolation:isolate}
+  background:#051512 center/cover no-repeat;border:1px solid rgba(0,230,118,.28);isolation:isolate}
 .ytcard::after{content:"";position:absolute;inset:0;z-index:1;
   background:linear-gradient(180deg,rgba(5,21,18,.08) 0%,rgba(5,21,18,.45) 55%,rgba(5,21,18,.84) 100%)}
 .ytcard__btn{position:absolute;inset:0;z-index:2;width:100%;padding:0;border:0;background:none;cursor:pointer;
