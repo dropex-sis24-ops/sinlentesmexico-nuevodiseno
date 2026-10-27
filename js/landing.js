@@ -9,25 +9,41 @@ var SIM_ESCENAS = [
   { k: 'noche', label: 'Conducción nocturna', archivo: 'video/noche.mp4' },
   { k: 'dia',   label: 'Avenida de día',      archivo: 'video/dia.mp4' }
 ];
+/* Cada condición dice de qué TIPO es, porque de eso depende qué procedimiento
+   la resuelve. Antes la lista sólo tenía catarata y presbicia, que son
+   justamente las dos que el láser NO corrige: pasara lo que pasara, el láser
+   nunca podía verse bien, y eso hacía pensar que el procedimiento no sirve. */
 var SIM_CONDICIONES = [
-  { k: 'cat',    label: 'Cataratas',                   desenfoque: 5.0, halo: 0.60, astig: 0,    velo: 0.40 },
-  { k: 'cat_as', label: 'Cataratas + astigmatismo',    desenfoque: 5.0, halo: 0.60, astig: 0.55, velo: 0.40 },
-  { k: 'pres',   label: 'Presbicia',                    desenfoque: 2.6, halo: 0.25, astig: 0,    velo: 0.10 },
-  { k: 'pres_as',label: 'Presbicia + astigmatismo',     desenfoque: 2.6, halo: 0.25, astig: 0.55, velo: 0.10 }
+  { k: 'mio',    tipo: 'refractiva', label: 'Miopía',                    desenfoque: 4.2, halo: 0.45, astig: 0,    velo: 0 },
+  { k: 'mio_as', tipo: 'refractiva', label: 'Miopía + astigmatismo',     desenfoque: 4.2, halo: 0.45, astig: 0.55, velo: 0 },
+  { k: 'cat',    tipo: 'catarata',   label: 'Cataratas',                 desenfoque: 5.0, halo: 0.60, astig: 0,    velo: 0.40 },
+  { k: 'cat_as', tipo: 'catarata',   label: 'Cataratas + astigmatismo',  desenfoque: 5.0, halo: 0.60, astig: 0.55, velo: 0.40 },
+  { k: 'pres',   tipo: 'presbicia',  label: 'Presbicia',                 desenfoque: 2.6, halo: 0.25, astig: 0,    velo: 0.10 },
+  { k: 'pres_as',tipo: 'presbicia',  label: 'Presbicia + astigmatismo',  desenfoque: 2.6, halo: 0.25, astig: 0.55, velo: 0.10 }
 ];
-/* corrige: cuánto del defecto quita (0 nada, 1 todo). haloExtra: halos propios del lente de noche. */
+/* corrige: cuánto del defecto quita cada procedimiento, por tipo de condición
+   (0 nada, 1 todo). Un 0 significa que ese procedimiento NO trata esa
+   condición, y entonces el simulador lo dice con todas las letras en vez de
+   mostrar una imagen borrosa que parezca un mal resultado.
+   haloExtra: halos propios del lente trifocal de noche.
+   Valores de demostración: los tiene que validar el oftalmólogo. */
 var SIM_LENTES = [
-  { k: '',    label: 'Sin corregir',          corrige: 0,    corrigeCat: 0,    haloExtra: 0 },
-  { k: 'las', label: 'Procedimiento Láser',   corrige: 0.88, corrigeCat: 0.15, haloExtra: 0 },
-  { k: 'ese', label: 'Presbilens Esencial',   corrige: 0.72, corrigeCat: 0.92, haloExtra: 0 },
-  { k: 'ava', label: 'Presbilens Avanzado',   corrige: 0.90, corrigeCat: 0.95, haloExtra: 0 },
-  { k: 'pre', label: 'Presbilens Premium',    corrige: 0.97, corrigeCat: 0.97, haloExtra: 0.38 }
+  { k: '',    label: 'Sin corregir',        corrige: { refractiva: 0,    catarata: 0,    presbicia: 0    }, haloExtra: 0 },
+  { k: 'las', label: 'Procedimiento Láser', corrige: { refractiva: 0.95, catarata: 0,    presbicia: 0    }, haloExtra: 0 },
+  { k: 'ese', label: 'Presbilens Esencial', corrige: { refractiva: 0.90, catarata: 0.95, presbicia: 0.55 }, haloExtra: 0 },
+  { k: 'ava', label: 'Presbilens Avanzado', corrige: { refractiva: 0.93, catarata: 0.96, presbicia: 0.80 }, haloExtra: 0 },
+  { k: 'pre', label: 'Presbilens Premium',  corrige: { refractiva: 0.95, catarata: 0.97, presbicia: 0.92 }, haloExtra: 0.38 }
 ];
+/* Por qué un procedimiento no aplica a una condición. Es el argumento del
+   cliente —recomendar menos de lo que el paciente pidió—, así que se muestra. */
+var SIM_NO_APLICA = {
+  catarata:  'no trata la catarata',
+  presbicia: 'no corrige la vista cansada'
+};
 function simBuscar(lista, k) { for (var i = 0; i < lista.length; i++) if (lista[i].k === k) return lista[i]; return lista[0]; }
 /* Mezcla condición + lente y devuelve los números con los que se pinta un lado del lienzo. */
 function simEfecto(cond, lente, escena) {
-  var esCat = cond.k.indexOf('cat') === 0;
-  var q = esCat ? lente.corrigeCat : lente.corrige;      // el láser no opera la catarata
+  var q = lente.corrige[cond.tipo] || 0;
   var resto = 1 - q;
   return {
     desenfoque: cond.desenfoque * resto,
@@ -36,13 +52,20 @@ function simEfecto(cond, lente, escena) {
     halo: cond.halo * resto + (escena.k === 'noche' ? lente.haloExtra : 0)
   };
 }
+/* Devuelve el texto de la etiqueta de un lado del lienzo. Si el procedimiento
+   no trata esa condición, lo aclara ahí mismo. */
+function simEtiqueta(lente, cond) {
+  if (!lente.k) return lente.label;
+  if ((lente.corrige[cond.tipo] || 0) > 0) return lente.label;
+  return lente.label + ' — ' + (SIM_NO_APLICA[cond.tipo] || 'no aplica en este caso');
+}
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = { proc: 'laser', monthly: 800, years: 15, open: 0, active: 0 };
     this.state.yt = '';
-    this.state.sim = false; this.state.simEsc = 'noche'; this.state.simCond = 'cat';
+    this.state.sim = false; this.state.simEsc = 'noche'; this.state.simCond = 'mio';
     this.state.simLente = ''; this.state.simLenteB = 'pre'; this.state.simComp = true;
     this.state.simError = '';
     var self = this;
@@ -1267,11 +1290,25 @@ class App extends Component {
       setSimLente: function (e) { self.setState({ simLente: e.target.value }); },
       setSimLenteB: function (e) { self.setState({ simLenteB: e.target.value }); },
       toggleSimComp: function () { self.setState({ simComp: !self.state.simComp }); },
-      simEtqA: simBuscar(SIM_LENTES, s.simLente).label,
-      simEtqB: simBuscar(SIM_LENTES, s.simLenteB).label,
+      simEtqA: simEtiqueta(simBuscar(SIM_LENTES, s.simLente), simBuscar(SIM_CONDICIONES, s.simCond)),
+      simEtqB: simEtiqueta(simBuscar(SIM_LENTES, s.simLenteB), simBuscar(SIM_CONDICIONES, s.simCond)),
       simNota: (function () {
-        var base = simBuscar(SIM_CONDICIONES, s.simCond).label + ' · ' + simBuscar(SIM_ESCENAS, s.simEsc).label + '. ';
-        var a = simBuscar(SIM_LENTES, s.simLente).label, b = simBuscar(SIM_LENTES, s.simLenteB).label;
+        var cond = simBuscar(SIM_CONDICIONES, s.simCond);
+        var base = cond.label + ' · ' + simBuscar(SIM_ESCENAS, s.simEsc).label + '. ';
+        var la = simBuscar(SIM_LENTES, s.simLente), lb = simBuscar(SIM_LENTES, s.simLenteB);
+        var a = la.label, b = lb.label;
+        /* Si alguno de los dos no trata esta condición, eso es lo primero que
+           hay que explicar: si no, la imagen sin cambios se lee como que el
+           procedimiento no sirve. */
+        var fuera = [];
+        if (la.k && !(la.corrige[cond.tipo] > 0)) fuera.push(a);
+        if (s.simComp && lb.k && lb.k !== la.k && !(lb.corrige[cond.tipo] > 0)) fuera.push(b);
+        if (fuera.length) {
+          var porque = cond.tipo === 'catarata'
+            ? ' no trata la catarata: el cristalino hay que sustituirlo, y esa es la ruta Presbilens. Por eso la imagen no cambia.'
+            : ' no corrige la vista cansada: para eso la ruta es Presbilens. Por eso la imagen no cambia.';
+          return base + (fuera.length > 1 ? fuera.join(' y ') + porque.replace(' no trata', ' no tratan').replace(' no corrige', ' no corrigen') : fuera[0] + porque);
+        }
         if (s.simComp && s.simLenteB !== s.simLente) return base + 'A la izquierda, ' + a.toLowerCase() + '; a la derecha, ' + b + '. Arrastra los selectores para cambiar cualquiera de los dos.';
         if (s.simLente) return base + 'Estás viendo cómo quedaría con ' + a + '.';
         return base + 'Así se ve hoy, sin corregir. Elige un procedimiento para comparar.';

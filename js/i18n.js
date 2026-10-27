@@ -360,6 +360,12 @@
   'No se pudo cargar el video. Si abriste el archivo con doble clic, ábrelo con Live Server o súbelo a un servidor.': 'The video could not be loaded. If you opened the file by double-clicking it, open it with Live Server or upload it to a server.',
   'Demo sobre video de referencia (calles de CDMX, Pexels). Representación orientativa, no un resultado garantizado.': 'Demo over reference footage (streets of Mexico City, Pexels). An illustration only, not a guaranteed result.',
 
+  'Miopía': 'Myopia',
+  'Miopía + astigmatismo': 'Myopia + astigmatism',
+  'no trata la catarata': 'does not treat cataracts',
+  'no corrige la vista cansada': 'does not correct presbyopia',
+  'no aplica en este caso': 'does not apply in this case',
+
   /* --- Etiquetas de accesibilidad --- */
   'Cómo funciona la corrección visual': 'How vision correction works',
   'Ojo humano en 3D: córnea, iris, cristalino y retina': 'Human eye in 3D: cornea, iris, natural lens and retina',
@@ -519,6 +525,14 @@
     ['. Arrastra los selectores para cambiar cualquiera de los dos.', '. Use the selectors to change either one.'],
     ['Estás viendo cómo quedaría con ', 'You are seeing how it would look with '],
     ['Así se ve hoy, sin corregir. Elige un procedimiento para comparar.', 'This is how it looks today, uncorrected. Choose a procedure to compare.'],
+    [' no trata la catarata: el cristalino hay que sustituirlo, y esa es la ruta Presbilens. Por eso la imagen no cambia.', ' does not treat cataracts: the natural lens has to be replaced, and that is the Presbilens route. That is why the image does not change.'],
+    [' no tratan la catarata: el cristalino hay que sustituirlo, y esa es la ruta Presbilens. Por eso la imagen no cambia.', ' do not treat cataracts: the natural lens has to be replaced, and that is the Presbilens route. That is why the image does not change.'],
+    [' no corrige la vista cansada: para eso la ruta es Presbilens. Por eso la imagen no cambia.', ' does not correct presbyopia: for that the route is Presbilens. That is why the image does not change.'],
+    [' no corrigen la vista cansada: para eso la ruta es Presbilens. Por eso la imagen no cambia.', ' do not correct presbyopia: for that the route is Presbilens. That is why the image does not change.'],
+    [' — no trata la catarata', ' — does not treat cataracts'],
+    [' — no corrige la vista cansada', ' — does not correct presbyopia'],
+    ['Miopía + astigmatismo', 'Myopia + astigmatism'],
+    ['Miopía', 'Myopia'],
     ['Conducción nocturna', 'Night driving'],
     ['Avenida de día', 'Daytime avenue'],
     ['Cataratas + astigmatismo', 'Cataracts + astigmatism'],
