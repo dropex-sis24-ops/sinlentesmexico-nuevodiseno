@@ -594,6 +594,9 @@ body.sim-abierto{overflow:hidden}
 .sim-bar h3{margin:0;font-size:18px;color:#fff}
 .sim-bar .eyebrow{color:#00E676;display:block;margin-bottom:5px}
 .sim-bar h3{font-family:Sora,system-ui,sans-serif;font-size:21px;letter-spacing:-.02em}
+/* Una línea, siempre la misma, en el encabezado: el aviso no puede faltar
+   (es un sitio médico) pero tampoco puede mover el alto del video. */
+.sim-aviso-fijo{display:block;margin-top:4px;font-size:12px;color:#8FAFA0}
 .sim-x{display:inline-flex;align-items:center;min-height:42px;padding:0 18px;border-radius:999px;cursor:pointer;
   background:none;border:1px solid rgba(255,255,255,.3);color:#E8EEF7;font-family:inherit;font-size:14px;
   font-weight:600;transition:background .3s,color .3s}
@@ -640,10 +643,25 @@ body.sim-abierto{overflow:hidden}
 .sim-etq--a{left:12px}
 .sim-etq--b{right:12px}
 .sim-linea{position:absolute;top:0;bottom:0;left:50%;width:2px;background:#00E676;z-index:2;pointer-events:none;box-shadow:0 0 16px rgba(0,230,118,.6)}
+/* La nota cambia de largo según el procedimiento elegido: con una línea
+   más, el pie crecía, el lienzo se achicaba y el video parecía hacer zoom
+   al cambiar de procedimiento. Se le reserva de entrada el alto del caso
+   más largo, así el lienzo no se mueve nunca. */
 .sim-pie2{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;margin:0;
-  padding:11px 16px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);flex:0 0 auto}
+  padding:11px 16px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  flex:0 0 auto;min-height:84px}
 .sim-nota2{flex:1;min-width:240px;margin:0;font-size:13.5px;line-height:1.45;color:#DCEFE6}
   .sim-nota2 small{display:block;margin-top:3px;font-size:11.5px;color:#8FAFA0}
+
+/* En celular la nota ocupa muchas más líneas y reservarle el alto del peor
+   caso se comería el video. Acá se fija el lienzo por su forma (16:9) y es
+   el pie el que se acomoda: el video tampoco se mueve, y no se pierde alto.
+   Va después de las reglas de .sim-lienzo y .sim-pie2 a propósito: con la
+   misma especificidad, gana la última. */
+@media (max-width:760px){
+  .sim-lienzo{flex:0 0 auto;aspect-ratio:16/9}
+  .sim-pie2{min-height:0}
+}
 
 /* ===== Miniaturas de YouTube con reproducción directa ===== */
 .ytcard{position:relative;display:block;width:100%;aspect-ratio:16/9;border-radius:28px;overflow:hidden;

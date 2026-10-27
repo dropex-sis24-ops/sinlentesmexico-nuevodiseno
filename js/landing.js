@@ -1952,7 +1952,7 @@ ${f.open ? html`<div class="faq-a">${f.a}</div>` : null}
 <div class=${v.simOvCls} onClick=${v.simFondo} role="dialog" aria-modal="true" aria-label="Simulador de visión">
 <div class="sim-box">
 <div class="sim-bar">
-<div><span class="eyebrow">Simulador</span><h3>Simulador de visión</h3></div>
+<div><span class="eyebrow">Simulador</span><h3>Simulador de visión</h3><span class="sim-aviso-fijo">Simulación orientativa, no un resultado garantizado</span></div>
 <button type="button" class="sim-x" onClick=${v.simCerrar}>Salir</button>
 </div>
 <div class="sim-cuerpo">
@@ -1978,7 +1978,7 @@ ${v.simComp ? html`<span class="sim-etq sim-etq--b">${v.simEtqB}</span><div clas
 </div>
 
 <div class="sim-pie2">
-<p class="sim-nota2">${v.simNota}<small>Demo sobre video de referencia (calles de CDMX, Pexels). Representación orientativa, no un resultado garantizado.</small></p>
+<p class="sim-nota2">${v.simNota}</p>
 </div>
 </div>` : null}
 </div>

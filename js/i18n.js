@@ -358,6 +358,7 @@
   'Simulación de visión': 'Vision simulation',
   'El navegador no deja arrancar el video solo. Toca aquí para reproducirlo.': 'The browser will not start the video on its own. Tap here to play it.',
   'No se pudo cargar el video. Si abriste el archivo con doble clic, ábrelo con Live Server o súbelo a un servidor.': 'The video could not be loaded. If you opened the file by double-clicking it, open it with Live Server or upload it to a server.',
+  'Simulación orientativa, no un resultado garantizado': 'Simulation for guidance only, not a guaranteed result',
   'Demo sobre video de referencia (calles de CDMX, Pexels). Representación orientativa, no un resultado garantizado.': 'Demo over reference footage (streets of Mexico City, Pexels). An illustration only, not a guaranteed result.',
 
   'Miopía': 'Myopia',
