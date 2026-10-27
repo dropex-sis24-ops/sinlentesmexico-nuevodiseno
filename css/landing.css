@@ -349,11 +349,14 @@ h1,h2,h3{font-family:Sora,system-ui,sans-serif;letter-spacing:-0.02em}
 
 /* ethic section */
 .ethic{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:56px;align-items:center;font-family:Inter,Manrope,system-ui,sans-serif}
-.ethic-card{position:relative;height:500px;border-radius:16px;background:linear-gradient(160deg,#EEF3FA 0%,#E2EAF4 100%);border:1px solid #DCE5F0;box-shadow:0 24px 48px -28px rgba(11,35,71,.35);overflow:hidden}
-.ethic-card::before{content:"";position:absolute;inset:18% 14%;border-radius:50%;background:radial-gradient(circle,rgba(63,208,232,.28),rgba(0,140,80,.1) 50%,transparent 72%);filter:blur(14px);pointer-events:none}
+/* El lente 3D es blanco translúcido: sobre fondo claro se perdía. Va sobre
+   el azul oscuro de la identidad (#07152B), con un halo verde detrás para
+   despegarlo del fondo. */
+.ethic-card{position:relative;height:500px;border-radius:16px;background:radial-gradient(120% 90% at 50% 45%,#0E2A45 0%,#07152B 62%);border:1px solid rgba(255,255,255,.1);box-shadow:0 24px 48px -28px rgba(7,21,43,.6);overflow:hidden}
+.ethic-card::before{content:"";position:absolute;inset:16% 12%;border-radius:50%;background:radial-gradient(circle,rgba(0,230,118,.3),rgba(0,230,118,.12) 48%,transparent 72%);filter:blur(26px);pointer-events:none}
 .ethic-card canvas{position:relative;width:100%;height:100%;display:block;cursor:grab;touch-action:pan-y}
-.ethic-badge{position:absolute;z-index:2;top:18px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;white-space:nowrap;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.85);border:1px solid #DCE5F0;color:#33445F;font:600 13px Inter,Manrope,sans-serif;backdrop-filter:blur(6px);pointer-events:none}
-.ethic-badge svg{color:#0A7A4B;animation:spin 6s linear infinite}
+.ethic-badge{position:absolute;z-index:2;top:18px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;white-space:nowrap;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:#E8EEF7;font:600 13px Inter,Manrope,sans-serif;backdrop-filter:blur(6px);pointer-events:none}
+.ethic-badge svg{color:#00E676;animation:spin 6s linear infinite}
 .ethic-text h2{font-family:Inter,Manrope,sans-serif;font-weight:700;font-size:clamp(28px,2.4vw,32px);line-height:1.22;letter-spacing:-.02em;color:#07152B;margin:0 0 18px}
 .ethic-intro{font-size:16px;line-height:1.7;font-weight:400;color:#4A5B76;margin:0 0 28px;max-width:560px}
 .ethic-list{list-style:none;margin:0;padding:0;display:grid;gap:14px}
@@ -574,7 +577,7 @@ body{background:#F8FAF9}
 .ihero{background:#051512}
 .s3{background:#051512}
 .s3-sticky{background:radial-gradient(1000px 700px at 70% 52%,#0E3A31 0%,#08201B 52%,#051512 100%)}
-.ethic-card{background:linear-gradient(160deg,#EEF6F2 0%,#E1EEE8 100%);border-color:#D6E6DE}
+
 
 /* ===== Ventana del simulador (vacía por ahora) ===== */
 .sim-ov{position:fixed;inset:0;z-index:120;display:none;align-items:stretch;justify-content:center;
