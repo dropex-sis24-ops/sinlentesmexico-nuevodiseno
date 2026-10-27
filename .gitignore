@@ -1,3 +1,10 @@
 .DS_Store
 .respaldo/
-.claude/
+
+# Config local de la sesión y skills de terceros: no se suben.
+.claude/*
+!.claude/skills/
+.claude/skills/*
+
+# La skill del proyecto, escrita por nosotros, sí va al repositorio.
+!.claude/skills/sinlentes/
