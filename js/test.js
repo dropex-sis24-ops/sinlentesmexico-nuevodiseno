@@ -126,7 +126,7 @@ class App extends Component {
 <header class="topbar">
 <div class="wrap" style="display: flex; justify-content: space-between; align-items: center; min-height: 72px; gap: 16px">
 <a class="logo" href="index.html"><span style="font-family: Sora, sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -0.02em">Sinlentesmexico</span><span class="logo-dot" aria-hidden="true"></span></a>
-<span style="display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: #33445F"><span class="pulse-dot"></span>Sin costo · Sin registro</span>
+<span style="display: inline-flex; align-items: center; gap: 14px; font-size: 14px; color: #33445F"><span style="display:inline-flex;align-items:center;gap:10px"><span class="pulse-dot"></span>Sin costo · Sin registro</span><span class="lang" role="group" aria-label="Idioma / Language"><button type="button" class="lang-b" data-lang="es" aria-pressed="true">ES</button><button type="button" class="lang-b" data-lang="en" aria-pressed="false">EN</button></span></span>
 </div>
 </header>
 

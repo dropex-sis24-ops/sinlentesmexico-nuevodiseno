@@ -117,3 +117,10 @@ footer{border-top:1px solid #E1E8F2;margin-top:80px}
 @media (max-width:960px){.grid,.res-grid{grid-template-columns:minmax(0,1fr)}.panel,.price-card{position:static}.panel{order:-1}.stage{height:180px}.eye3d{width:150px;height:150px}}
 @media (max-width:640px){.two{grid-template-columns:minmax(0,1fr) !important}.incl{grid-template-columns:minmax(0,1fr)}}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none !important;transition:none !important}}
+
+/* Selector de idioma (mismo que la portada) */
+.lang{display:inline-flex;align-items:center;gap:2px;padding:3px;border-radius:999px;
+  border:1px solid rgba(11,77,65,.22);background:rgba(11,77,65,.05)}
+.lang-b{min-height:34px;min-width:40px;padding:0 10px;border:0;border-radius:999px;cursor:pointer;
+  background:none;color:#2B3A52;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.04em}
+.lang-b[aria-pressed="true"]{background:#00E676;color:#051512}

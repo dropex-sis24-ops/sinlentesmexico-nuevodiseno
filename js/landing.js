@@ -1253,6 +1253,7 @@ class App extends Component {
       simOn: s.sim,
       simOvCls: s.sim ? 'sim-ov on' : 'sim-ov',
       simAbrir: function (e) { if (e) e.preventDefault(); document.body.classList.add('sim-abierto'); self.setState({ sim: true, simComp: true }); setTimeout(function () { self.simIniciar(); }, 60); },
+      simMenu: function () { document.body.classList.add('sim-abierto'); self.setState({ menu: false, sim: true, simComp: true }); setTimeout(function () { self.simIniciar(); }, 60); },
       simCerrar: function () { document.body.classList.remove('sim-abierto'); self.simParar(); self.setState({ sim: false }); },
       simFondo: function (e) { if (e.target === e.currentTarget) { document.body.classList.remove('sim-abierto'); self.simParar(); self.setState({ sim: false }); } },
       simCvRef: function (n) { if (n) self._simCv = n; },
@@ -1375,7 +1376,11 @@ class App extends Component {
 </nav>
 <div class="nav-actions">
 <button type="button" class=${v.menuCls} aria-expanded=${v.menuOpen} onClick=${v.toggleMenu}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"></path></svg>Menú</button>
+<button type="button" class="btn top-cta nav-sim" onClick=${v.simAbrir}>Simulador</button>
 <a class="btn btn-primary top-cta nav-cta shine" href="test.html">Hacer el test</a>
+<div class="lang" role="group" aria-label="Idioma / Language">
+<button type="button" class="lang-b" data-lang="es" aria-pressed="true">ES</button><button type="button" class="lang-b" data-lang="en" aria-pressed="false">EN</button>
+</div>
 <a class="btn-login" href="https://www.sinlentesmexico.mx/portal" aria-label="Login"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg><span>Login</span></a>
 </div>
 </div>
@@ -1387,6 +1392,8 @@ ${v.menuOpen ? html`
 <a href="#proceso" onClick=${v.closeMenu}>Cómo funciona <span aria-hidden="true">→</span></a>
 <a href="https://www.sinlentesmexico.mx/aliados" onClick=${v.closeMenu}>Únete al equipo <span aria-hidden="true">→</span></a>
 <a href="#faq" onClick=${v.closeMenu}>Preguntas <span aria-hidden="true">→</span></a>
+<button type="button" onClick=${v.simMenu}>Ver el simulador <span aria-hidden="true">→</span></button>
+<div class="menu-lang"><span>Idioma / Language</span><span class="lang" role="group"><button type="button" class="lang-b" data-lang="es" aria-pressed="true">ES</button><button type="button" class="lang-b" data-lang="en" aria-pressed="false">EN</button></span></div>
 </nav>
 ` : null}
 </header>

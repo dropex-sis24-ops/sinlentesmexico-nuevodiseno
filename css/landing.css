@@ -36,7 +36,26 @@ h1,h2,h3{font-family:Sora,system-ui,sans-serif;letter-spacing:-0.02em}
 .navlinks a::after{content:"";position:absolute;left:50%;bottom:4px;width:5px;height:5px;border-radius:50%;background:#22C38E;transform:translateX(-50%) scale(0);transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
 .navlinks a:hover{color:#0B6B43;background:#E3F7EE;transform:translateY(-1px)}
 .navlinks a:hover::after{transform:translateX(-50%) scale(1)}
-.nav-actions{flex:0 0 auto;display:flex;align-items:center;gap:clamp(12px,1.8vw,28px)}
+.nav-actions{flex:0 0 auto;display:flex;align-items:center;gap:clamp(8px,1.1vw,16px)}
+
+/* Botón del simulador en la barra: secundario, no le compite al test */
+.nav-sim{min-height:46px;padding:0 16px;font-size:15px;border-radius:8px;background:transparent;
+  color:#0B4D41;border:1px solid rgba(11,77,65,.3);cursor:pointer}
+.nav-sim:hover{background:#E3F7EE;border-color:#0B6B43;color:#0B6B43}
+.topbar.over .nav-sim{color:#fff;border-color:rgba(255,255,255,.45)}
+.topbar.over .nav-sim:hover{background:rgba(255,255,255,.16);border-color:#fff;color:#fff}
+
+/* Selector de idioma */
+.lang{display:inline-flex;align-items:center;gap:2px;padding:3px;border-radius:999px;
+  border:1px solid rgba(11,77,65,.22);background:rgba(11,77,65,.05)}
+.lang-b{min-height:34px;min-width:40px;padding:0 10px;border:0;border-radius:999px;cursor:pointer;
+  background:none;color:#2B3A52;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.04em}
+.lang-b[aria-pressed="true"]{background:#00E676;color:#051512}
+.lang-b:hover{color:#0B6B43}
+.lang-b[aria-pressed="true"]:hover{color:#051512}
+.topbar.over .lang{border-color:rgba(255,255,255,.32);background:rgba(255,255,255,.1)}
+.topbar.over .lang-b{color:#fff}
+.topbar.over .lang-b[aria-pressed="true"]{background:#fff;color:#0B4D41}
 .btn-login{position:relative;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 6px;color:#2B3A52;font-weight:500;font-size:clamp(13.5px,1.15vw,15.5px);text-decoration:none;transition:color .3s}
 .btn-login::after{content:"";position:absolute;left:6px;right:6px;bottom:6px;height:2px;border-radius:2px;background:#22C38E;transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.16,1,.3,1)}
 .btn-login:hover{color:#0B6B43}
@@ -48,10 +67,34 @@ h1,h2,h3{font-family:Sora,system-ui,sans-serif;letter-spacing:-0.02em}
 .menu-btn{display:none;align-items:center;gap:8px;min-height:46px;padding:0 18px;border-radius:999px;border:1.5px solid #C6D2E4;background:#fff;color:#0B1A33;font:700 14px Manrope,sans-serif;cursor:pointer;transition:all .35s cubic-bezier(.16,1,.3,1)}
 .menu-btn:hover,.menu-btn.on{color:#fff;background:#0F7A4D;border-color:#0F7A4D}
 .menu-panel{position:absolute;left:16px;right:16px;top:calc(100% + 10px);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:12px;border-radius:24px;background:#fff;border:1px solid #E1E8F2;box-shadow:0 30px 60px -30px rgba(7,21,43,.45);animation:fadeUp .45s cubic-bezier(.16,1,.3,1) both}
-.menu-panel a{display:flex;align-items:center;justify-content:space-between;min-height:52px;padding:0 18px;border-radius:16px;color:#0B1A33;text-decoration:none;font-weight:700;transition:all .3s}
-.menu-panel a:hover{background:#E3F7EE;color:#0B6B43}
+.menu-panel a,.menu-panel>button{display:flex;align-items:center;justify-content:space-between;min-height:52px;padding:0 18px;border-radius:16px;color:#0B1A33;text-decoration:none;font-weight:700;transition:all .3s}
+.menu-panel a:hover,.menu-panel>button:hover{background:#E3F7EE;color:#0B6B43}
 @media (max-width:1100px){.navbar.wrap{padding:0 16px}}
+/* Con el botón del simulador y el selector de idioma, la barra queda más
+   llena: se compactan los enlaces antes de que se encimen. */
+/* Con el botón del simulador y el selector de idioma la barra quedó más
+   llena. En pantallas grandes la barra usa más ancho que el resto del
+   contenido, y debajo de 1280 el simulador pasa al menú para no encimarse. */
+@media (min-width:1280px){.topbar .wrap{max-width:min(1560px,calc(100vw - 48px))}}
+@media (max-width:1560px){
+  .navbar{gap:16px}
+  .navlinks a{padding:0 7px}
+  .nav-actions{gap:10px}
+}
+@media (max-width:1280px){.nav-sim{display:none}}
+/* En celular la barra no da para el selector: pasa al menú desplegable. */
+@media (max-width:760px){.nav-actions .lang{display:none}}
+.menu-lang{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  min-height:52px;padding:0 18px;border-radius:16px;color:#2B3A52;font-size:14px;font-weight:600}
+.menu-lang .lang-b{min-height:40px}
+@media (min-width:761px){.menu-lang{display:none}}
+/* El panel del menú es claro aunque la barra esté sobre el video oscuro:
+   anula ahí los colores de .topbar.over. */
+.topbar.over .menu-lang .lang{border-color:rgba(11,77,65,.22);background:rgba(11,77,65,.05)}
+.topbar.over .menu-lang .lang-b{color:#2B3A52}
+.topbar.over .menu-lang .lang-b[aria-pressed="true"]{background:#00E676;color:#051512}
 @media (max-width:980px){.navlinks{display:none}.navbar{justify-content:space-between}.menu-btn{display:inline-flex}}
+.menu-panel>button{width:100%;font:inherit;font-weight:700;text-align:left;background:none;border:0;cursor:pointer}
 @media (max-width:520px){.menu-panel{grid-template-columns:minmax(0,1fr)}.btn-login span{display:none}}
 .pulse-dot{width:8px;height:8px;border-radius:50%;background:#22C38E;box-shadow:0 0 0 0 rgba(34,195,142,.6);animation:pulse 2s infinite}
 @keyframes pulse{70%{box-shadow:0 0 0 10px rgba(34,195,142,0)}100%{box-shadow:0 0 0 0 rgba(34,195,142,0)}}
@@ -518,17 +561,17 @@ body{background:#F8FAF9}
 .ethic-card{background:linear-gradient(160deg,#EEF6F2 0%,#E1EEE8 100%);border-color:#D6E6DE}
 
 /* ===== Ventana del simulador (vacía por ahora) ===== */
-.sim-ov{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;
-  padding:clamp(12px,3vh,34px);background:rgba(4,12,10,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.sim-ov{position:fixed;inset:0;z-index:120;display:none;align-items:stretch;justify-content:center;
+  padding:0;background:#040C0A}
 .sim-ov.on{display:flex}
 body.sim-abierto{overflow:hidden}
-.sim-box{position:relative;width:min(1240px,100%);height:100%;max-height:min(100%,860px);overflow:hidden;display:flex;flex-direction:column;background:#07152B;color:#E8EEF7;
-  border:1px solid rgba(255,255,255,.14);border-radius:24px;box-shadow:0 40px 100px rgba(0,0,0,.6);
+.sim-box{position:relative;width:100%;height:100%;max-height:100%;overflow:hidden;display:flex;flex-direction:column;background:#07152B;color:#E8EEF7;
+  border:0;border-radius:0;
   animation:simUp .34s cubic-bezier(.2,.8,.2,1)}
-@keyframes simUp{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes simUp{from{opacity:0}to{opacity:1}}
 .sim-bar{flex:0 0 auto;z-index:4;display:flex;align-items:center;justify-content:space-between;gap:16px;
-  padding:14px 22px;background:rgba(7,21,43,.94);backdrop-filter:blur(12px);
-  border-bottom:1px solid rgba(255,255,255,.1);border-radius:24px 24px 0 0}
+  padding:14px clamp(18px,4vw,40px);background:rgba(7,21,43,.94);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.1);border-radius:0}
 .sim-bar h3{margin:0;font-size:18px;color:#fff}
 .sim-bar .eyebrow{color:#00E676;display:block;margin-bottom:5px}
 .sim-bar h3{font-family:Sora,system-ui,sans-serif;font-size:21px;letter-spacing:-.02em}
@@ -536,14 +579,12 @@ body.sim-abierto{overflow:hidden}
   background:none;border:1px solid rgba(255,255,255,.3);color:#E8EEF7;font-family:inherit;font-size:14px;
   font-weight:600;transition:background .3s,color .3s}
 .sim-x:hover{background:#00E676;border-color:#00E676;color:#051512}
-.sim-cuerpo{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;padding:16px 22px 18px}
+.sim-cuerpo{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;padding:16px clamp(18px,4vw,40px) 18px}
   .sim-panel{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px}
 .sim-vacio{margin:0;font-size:15px;line-height:1.6;color:#8E9FB8;max-width:420px}
 @media (max-width:760px){
-  .sim-ov{padding:0}
-  .sim-box{border-radius:0;height:100%;max-height:100%;border:0}
-  .sim-bar{border-radius:0;padding:14px 18px}
-  .sim-cuerpo{min-height:0;flex:1}
+  .sim-bar{padding:14px 18px}
+  .sim-cuerpo{min-height:0;flex:1;padding:14px 18px 16px}
 }
 @media (prefers-reduced-motion:reduce){.sim-box{animation:none}}
 .sim-video{position:relative;width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#000;
