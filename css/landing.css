@@ -606,3 +606,62 @@ body.sim-abierto{overflow:hidden}
   padding:28px;border:0;cursor:pointer;font-family:inherit;font-size:15px;line-height:1.55;font-weight:600;
   color:#fff;background:rgba(5,21,18,.82);backdrop-filter:blur(4px)}
 .sim-aviso:hover{background:rgba(5,21,18,.9)}
+
+/* =========================================================
+   Jerarquía de movimiento — criterio Noho
+   "La mayor parte de la experiencia se mantiene deliberadamente simple;
+    la interacción se pronuncia solo cuando tiene algo que aportar."
+   Nada se quita: se baja el volumen de lo secundario para que lo
+   importante (el recorrido 3D del ojo) destaque de verdad.
+   ========================================================= */
+
+:root{
+  /* una sola escala de tiempos, en vez de .25/.3/.35/.45/.7/.9/1s mezclados */
+  --t-micro:150ms;   /* respuesta al dedo: presionar, marcar */
+  --t-sm:250ms;      /* hover, foco */
+  --t-md:400ms;      /* cambios de estado dentro de un bloque */
+  --t-lg:600ms;      /* apariciones al hacer scroll */
+  /* y una sola curva, la que ya dominaba el proyecto */
+  --e-out:cubic-bezier(.16,1,.3,1);
+  --e-spring:cubic-bezier(.34,1.56,.64,1);
+}
+
+/* 1 · Las apariciones bajan el volumen.
+   Antes: 46 px de salto y 6 px de desenfoque, 1,15 s, en 45 elementos a la vez.
+   El desenfoque además castiga a quien ya ve borroso, que es este público. */
+@keyframes aUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes aLeft{from{opacity:0;transform:translateX(-22px)}to{opacity:1;transform:none}}
+@keyframes aZoom{from{opacity:0;transform:scale(.96) translateY(14px)}to{opacity:1;transform:none}}
+@keyframes aMask{from{opacity:0;clip-path:inset(0 0 100% 0)}to{opacity:1;clip-path:inset(-10% -5% -30% -5%)}}
+[data-rv][data-in]{animation-duration:var(--t-lg);animation-timing-function:var(--e-out)}
+[data-rv=zoom][data-in]{animation-duration:var(--t-lg)}
+[data-rv=mask][data-in]{animation-duration:var(--t-lg)}
+
+/* El recorrido 3D del ojo no se toca: es la sección que carga el peso.
+   Al callar el resto, pasa a destacar sin agregarle nada encima. */
+
+/* 2 · Micro-interacciones que guían, no que decoran.
+   Lo que faltaba: el sitio no tenía NINGÚN estado al presionar. */
+.btn,.btn-white,.nav-cta,.btn-login,.sim-chip,.sim-x,.sim-sw,.ytcard__btn,.sim-campo select{
+  transition:transform var(--t-micro) var(--e-out),
+             background var(--t-sm) var(--e-out),
+             color var(--t-sm) var(--e-out),
+             border-color var(--t-sm) var(--e-out),
+             box-shadow var(--t-sm) var(--e-out)}
+.btn:active,.btn-white:active,.nav-cta:active,.sim-chip:active,.sim-x:active,.ytcard__btn:active{
+  transform:translateY(0) scale(.985)}
+
+/* 3 · Foco visible para quien navega con teclado. Antes casi no existía. */
+a:focus-visible,button:focus-visible,select:focus-visible,[tabindex]:focus-visible{
+  outline:2px solid #00E676;outline-offset:3px;border-radius:6px}
+.t-light a:focus-visible,.t-light button:focus-visible,.t-light select:focus-visible{outline-color:#0A7A4B}
+
+/* 4 · Las tarjetas responden al mouse: señal de que son tocables. */
+.proc,.sede,.ytcard{transition:transform var(--t-sm) var(--e-out),
+                               border-color var(--t-sm) var(--e-out),
+                               box-shadow var(--t-sm) var(--e-out)}
+.proc:hover,.sede:hover{transform:translateY(-3px)}
+.ytcard:hover{transform:translateY(-3px);border-color:rgba(0,230,118,.5)}
+
+/* Con "reducir movimiento" activado, la regla global de arriba ya apaga
+   todo esto; el foco visible se mantiene porque no es animación. */
