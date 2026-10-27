@@ -25,14 +25,18 @@ var SIM_CONDICIONES = [
    (0 nada, 1 todo). Un 0 significa que ese procedimiento NO trata esa
    condición, y entonces el simulador lo dice con todas las letras en vez de
    mostrar una imagen borrosa que parezca un mal resultado.
-   haloExtra: halos propios del lente trifocal de noche.
+   haloExtra: halos propios del lente de noche. El trifocal (Premium) da
+   algo más que el de rango extendido, y por eso el test nunca lo propone a
+   quien maneja de noche. Es un matiz, no un castigo: con 0.38 el Premium
+   terminaba con casi el mismo halo que un ojo sin operar (0.40 contra 0.45),
+   o sea que el simulador borraba el beneficio del lente más caro.
    Valores de demostración: los tiene que validar el oftalmólogo. */
 var SIM_LENTES = [
   { k: '',    label: 'Sin corregir',        corrige: { refractiva: 0,    catarata: 0,    presbicia: 0    }, haloExtra: 0 },
   { k: 'las', label: 'Procedimiento Láser', corrige: { refractiva: 0.95, catarata: 0,    presbicia: 0    }, haloExtra: 0 },
   { k: 'ese', label: 'Presbilens Esencial', corrige: { refractiva: 0.90, catarata: 0.95, presbicia: 0.55 }, haloExtra: 0 },
-  { k: 'ava', label: 'Presbilens Avanzado', corrige: { refractiva: 0.93, catarata: 0.96, presbicia: 0.80 }, haloExtra: 0 },
-  { k: 'pre', label: 'Presbilens Premium',  corrige: { refractiva: 0.95, catarata: 0.97, presbicia: 0.92 }, haloExtra: 0.38 }
+  { k: 'ava', label: 'Presbilens Avanzado', corrige: { refractiva: 0.93, catarata: 0.96, presbicia: 0.80 }, haloExtra: 0.02 },
+  { k: 'pre', label: 'Presbilens Premium',  corrige: { refractiva: 0.97, catarata: 0.98, presbicia: 0.94 }, haloExtra: 0.12 }
 ];
 /* Por qué un procedimiento no aplica a una condición. Es el argumento del
    cliente —recomendar menos de lo que el paciente pidió—, así que se muestra. */
@@ -1309,8 +1313,11 @@ class App extends Component {
             : ' no corrige la vista cansada: para eso la ruta es Presbilens. Por eso la imagen no cambia.';
           return base + (fuera.length > 1 ? fuera.join(' y ') + porque.replace(' no trata', ' no tratan').replace(' no corrige', ' no corrigen') : fuera[0] + porque);
         }
-        if (s.simComp && s.simLenteB !== s.simLente) return base + 'A la izquierda, ' + a.toLowerCase() + '; a la derecha, ' + b + '. Arrastra los selectores para cambiar cualquiera de los dos.';
-        if (s.simLente) return base + 'Estás viendo cómo quedaría con ' + a + '.';
+        var halos = s.simEsc === 'noche' && ((la.k === 'pre') || (s.simComp && lb.k === 'pre'))
+          ? ' El trifocal deja algo más de halos de noche que el de rango extendido: por eso el test no lo propone a quien maneja mucho de noche.'
+          : '';
+        if (s.simComp && s.simLenteB !== s.simLente) return base + 'A la izquierda, ' + a.toLowerCase() + '; a la derecha, ' + b + '.' + halos + ' Arrastra los selectores para cambiar cualquiera de los dos.';
+        if (s.simLente) return base + 'Estás viendo cómo quedaría con ' + a + '.' + halos;
         return base + 'Así se ve hoy, sin corregir. Elige un procedimiento para comparar.';
       })()
     };

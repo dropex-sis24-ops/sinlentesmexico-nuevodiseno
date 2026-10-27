@@ -529,6 +529,7 @@
     [' no tratan la catarata: el cristalino hay que sustituirlo, y esa es la ruta Presbilens. Por eso la imagen no cambia.', ' do not treat cataracts: the natural lens has to be replaced, and that is the Presbilens route. That is why the image does not change.'],
     [' no corrige la vista cansada: para eso la ruta es Presbilens. Por eso la imagen no cambia.', ' does not correct presbyopia: for that the route is Presbilens. That is why the image does not change.'],
     [' no corrigen la vista cansada: para eso la ruta es Presbilens. Por eso la imagen no cambia.', ' do not correct presbyopia: for that the route is Presbilens. That is why the image does not change.'],
+    [' El trifocal deja algo más de halos de noche que el de rango extendido: por eso el test no lo propone a quien maneja mucho de noche.', ' The trifocal leaves slightly more halos at night than the extended-range lens: that is why the test does not propose it to people who drive a lot at night.'],
     [' — no trata la catarata', ' — does not treat cataracts'],
     [' — no corrige la vista cansada', ' — does not correct presbyopia'],
     ['Miopía + astigmatismo', 'Myopia + astigmatism'],
