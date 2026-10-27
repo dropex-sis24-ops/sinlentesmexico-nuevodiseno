@@ -613,10 +613,15 @@
     for (var j = 0; j < els.length; j++) pasarAtributos(els[j]);
   }
 
+  /* Sólo escribe si el valor cambió de verdad. Escribir un atributo, aunque
+     sea el mismo, obliga al navegador a recalcular estilos; y como los
+     botones viven en la barra, que lleva desenfoque de fondo, eso hacía
+     parpadear toda la barra mientras se hacía scroll. */
   function pintarBotones() {
     var bs = document.querySelectorAll('.lang-b[data-lang]');
     for (var i = 0; i < bs.length; i++) {
-      bs[i].setAttribute('aria-pressed', bs[i].getAttribute('data-lang') === idioma ? 'true' : 'false');
+      var quiero = bs[i].getAttribute('data-lang') === idioma ? 'true' : 'false';
+      if (bs[i].getAttribute('aria-pressed') !== quiero) bs[i].setAttribute('aria-pressed', quiero);
     }
   }
 
@@ -648,15 +653,26 @@
   var pendiente = null;
   new MutationObserver(function (muts) {
     if (aplicando) return;
-    for (var i = 0; i < muts.length; i++) {
-      if (muts[i].addedNodes.length || muts[i].type === 'characterData') {
-        if (pendiente) return;
-        /* setTimeout y no requestAnimationFrame: en una pestaña de fondo
-           rAF no corre, y la página se quedaría a medio traducir. */
-        pendiente = setTimeout(function () { pendiente = null; if (idioma === 'en') aplicar(); else pintarBotones(); }, 0);
-        return;
+    /* En español no hay nada que traducir: sólo interesa si aparecieron
+       botones de idioma nuevos. Mientras se hace scroll la página se
+       redibuja todo el tiempo, y despertarse en cada cuadro para no hacer
+       nada era justo lo que hacía parpadear la barra. */
+    var hayQueMirar = false;
+    for (var i = 0; i < muts.length && !hayQueMirar; i++) {
+      var m = muts[i];
+      if (idioma === 'en') {
+        hayQueMirar = m.addedNodes.length > 0 || m.type === 'characterData';
+      } else {
+        for (var j = 0; j < m.addedNodes.length; j++) {
+          var n = m.addedNodes[j];
+          if (n.nodeType === 1 && (n.matches && n.matches('.lang-b') || n.querySelector && n.querySelector('.lang-b'))) { hayQueMirar = true; break; }
+        }
       }
     }
+    if (!hayQueMirar || pendiente) return;
+    /* setTimeout y no requestAnimationFrame: en una pestaña de fondo
+       rAF no corre, y la página se quedaría a medio traducir. */
+    pendiente = setTimeout(function () { pendiente = null; if (idioma === 'en') aplicar(); else pintarBotones(); }, 0);
   }).observe(document.body, { childList: true, subtree: true, characterData: true });
 
   aplicar();
